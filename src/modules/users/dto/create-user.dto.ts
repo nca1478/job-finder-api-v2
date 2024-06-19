@@ -1,25 +1,18 @@
-import {
-  IsEmail,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString()
+  @IsNotEmpty({ message: 'El nombre es requerido' })
   name: string;
 
-  @IsString()
-  @IsEmail()
+  @IsNotEmpty({ message: 'El email es requerido' })
+  @IsEmail({}, { message: 'Debe ser un email válido' })
   email: string;
 
-  @IsString()
-  @MinLength(6)
-  @MaxLength(50)
+  @IsNotEmpty({ message: 'La contraseña es requerida' })
+  @MinLength(8, { message: 'La contraseña debe tener más de 8 caracteres' })
   @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message:
-      'The password must have a Uppercase, lowercase letter and a number',
+      'La contraseña debe tener caracteres en mayúscula, minúscula y un número',
   })
   password: string;
 }
