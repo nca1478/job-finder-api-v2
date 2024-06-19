@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserEntity } from './entities/user.entity';
@@ -26,20 +27,20 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<UserEntity> {
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<UserEntity> {
+  remove(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
     return this.usersService.remove(id);
   }
 }
