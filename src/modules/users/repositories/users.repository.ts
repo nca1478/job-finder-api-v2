@@ -17,8 +17,8 @@ export class UsersRepository {
     return await this.usersRepo.save(newUser);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<UserEntity[]> {
+    return this.usersRepo.find();
   }
 
   findOne(id: number) {

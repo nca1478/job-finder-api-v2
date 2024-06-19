@@ -1,5 +1,6 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -33,5 +34,11 @@ export class UserEntity implements UserModel {
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  checkFields() {
+    this.email = this.email.toLowerCase().trim();
   }
 }

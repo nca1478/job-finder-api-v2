@@ -11,7 +11,7 @@ export class UsersService {
     return this.repository.create(createUserDto);
   }
 
-  findAll() {
+  findAll(): Promise<UserEntity[]> {
     return this.repository.findAll();
   }
 
