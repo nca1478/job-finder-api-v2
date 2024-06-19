@@ -46,7 +46,15 @@ export class UsersRepository {
     return this.usersRepo.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<UserEntity> {
+    const user = await this.usersRepo.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no fué encontrado`);
+    }
+
+    return this.usersRepo.remove(user);
   }
 }

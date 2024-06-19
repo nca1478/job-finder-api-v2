@@ -23,7 +23,7 @@ export class UsersService {
     return this.repository.update(id, updateUserDto);
   }
 
-  remove(id: number) {
+  remove(id: string): Promise<UserEntity> {
     return this.repository.remove(id);
   }
 }
