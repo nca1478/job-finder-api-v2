@@ -33,8 +33,17 @@ export class UsersRepository {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    const user = await this.usersRepo.preload({
+      ...updateUserDto,
+      id,
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no fué encontrado`);
+    }
+
+    return this.usersRepo.save(user);
   }
 
   remove(id: number) {

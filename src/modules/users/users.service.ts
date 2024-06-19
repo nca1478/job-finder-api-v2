@@ -19,7 +19,7 @@ export class UsersService {
     return this.repository.findOne(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     return this.repository.update(id, updateUserDto);
   }
 

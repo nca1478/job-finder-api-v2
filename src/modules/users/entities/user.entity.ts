@@ -32,6 +32,7 @@ export class UserEntity implements UserModel {
   createdAt: Date;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
