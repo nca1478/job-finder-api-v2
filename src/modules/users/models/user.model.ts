@@ -4,10 +4,20 @@ export enum roleEnum {
 }
 
 export interface UserModel {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   password: string;
-  role: roleEnum;
-  createdAt: Date;
+  role?: roleEnum;
+  birthday: Date;
+  profession: string;
+  education: string;
+  cvUrl: string;
+  linkedinUser: string;
+  twitterUser: string;
+  instagramUser: string;
+  facebookUser: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
 }
