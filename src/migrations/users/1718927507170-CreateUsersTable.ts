@@ -1,5 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 import { roleEnum } from '../../modules/users/models/user.model';
+import { basicPropertiesMigration } from '../../common/database/basic-properties.migration';
 
 export class CreateUsersTable1718927507170 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -9,11 +10,7 @@ export class CreateUsersTable1718927507170 implements MigrationInterface {
       new Table({
         name: 'users',
         columns: [
-          {
-            name: 'id',
-            type: 'uuid',
-            isPrimary: true,
-          },
+          ...basicPropertiesMigration,
           {
             name: 'name',
             type: 'varchar',
@@ -70,22 +67,6 @@ export class CreateUsersTable1718927507170 implements MigrationInterface {
           {
             name: 'facebookUser',
             type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'createdAt',
-            type: 'timestamp',
-            default: 'CURRENT_TIMESTAMP(6)',
-          },
-          {
-            name: 'updatedAt',
-            type: 'timestamp',
-            default: 'CURRENT_TIMESTAMP(6)',
-            onUpdate: 'CURRENT_TIMESTAMP(6)',
-          },
-          {
-            name: 'deletedAt',
-            type: 'timestamp',
             isNullable: true,
           },
         ],
