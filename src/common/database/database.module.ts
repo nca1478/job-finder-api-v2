@@ -17,7 +17,7 @@ import { UserEntity } from '../../modules/users/entities/user.entity';
           password: configService.getDbPassword(),
           database: configService.getDbName(),
           entities: [UserEntity],
-          synchronize: true,
+          synchronize: false,
         };
       },
       inject: [EnvConfigService],

@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { randomUUID } from 'node:crypto';
 import { UserModel, roleEnum } from '../models/user.model';
 
 @Entity('users')
@@ -54,18 +55,38 @@ export class UserEntity implements UserModel {
 
   @CreateDateColumn({
     type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
 
   @DeleteDateColumn({
     type: 'timestamp',
+    nullable: true,
   })
   deletedAt: Date;
+
+  @BeforeInsert()
+  generatedId() {
+    if (this.id) {
+      return;
+    }
+    this.id = randomUUID();
+  }
+
+  @BeforeInsert()
+  setRole() {
+    if (this.role) {
+      return;
+    }
+    this.role = roleEnum.user;
+  }
 
   @BeforeInsert()
   @BeforeUpdate()
