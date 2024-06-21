@@ -1,22 +1,11 @@
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'node:crypto';
+import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import { UserModel, roleEnum } from '../models/user.model';
+import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
 
 @Entity('users')
-export class UserEntity implements UserModel {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class UserEntity extends ColumnCommonEntity implements UserModel {
   @Column()
   name: string;
 
@@ -52,25 +41,6 @@ export class UserEntity implements UserModel {
 
   @Column({ nullable: true })
   facebookUser: string;
-
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
-  })
-  updatedAt: Date;
-
-  @DeleteDateColumn({
-    type: 'timestamp',
-    nullable: true,
-  })
-  deletedAt: Date;
 
   @BeforeInsert()
   generatedId() {
