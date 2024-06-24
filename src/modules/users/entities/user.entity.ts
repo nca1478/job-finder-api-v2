@@ -12,7 +12,7 @@ export class UserEntity extends ColumnCommonEntity implements UserModel {
   @Column('text', { unique: true })
   email: string;
 
-  @Column('text', { select: false })
+  @Column('text')
   password: string;
 
   @Column({ type: 'enum', enum: roleEnum, default: roleEnum.user })

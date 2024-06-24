@@ -33,6 +33,20 @@ export class UsersRepository {
     return user;
   }
 
+  async findOneByEmail(email: string): Promise<UserEntity> {
+    const user = await this.usersRepo.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `Usuario con email ${email} no fué encontrado`,
+      );
+    }
+
+    return user;
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const user = await this.usersRepo.preload({
       ...updateUserDto,
