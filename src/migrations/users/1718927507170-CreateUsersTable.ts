@@ -30,6 +30,26 @@ export class CreateUsersTable1718927507170 implements MigrationInterface {
             enum: Object.values(roleEnum),
           },
           {
+            name: 'img',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'google',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'facebook',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'tokenRecovery',
+            type: 'text',
+            isNullable: true,
+          },
+          {
             name: 'birthday',
             type: 'date',
             isNullable: true,
@@ -46,7 +66,7 @@ export class CreateUsersTable1718927507170 implements MigrationInterface {
           },
           {
             name: 'cvUrl',
-            type: 'varchar',
+            type: 'text',
             isNullable: true,
           },
           {
@@ -68,6 +88,11 @@ export class CreateUsersTable1718927507170 implements MigrationInterface {
             name: 'facebookUser',
             type: 'varchar',
             isNullable: true,
+          },
+          {
+            name: 'active',
+            type: 'boolean',
+            default: true,
           },
         ],
       }),

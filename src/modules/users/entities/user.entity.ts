@@ -6,41 +6,56 @@ import { ColumnCommonEntity } from '../../../common/entities/column-common.entit
 
 @Entity('users')
 export class UserEntity extends ColumnCommonEntity implements UserModel {
-  @Column()
+  @Column('varchar')
   name: string;
 
-  @Column('text', { unique: true })
+  @Column('varchar', { unique: true })
   email: string;
 
-  @Column('text')
+  @Column('varchar')
   password: string;
 
   @Column({ type: 'enum', enum: roleEnum, default: roleEnum.user })
   role: roleEnum;
 
-  @Column({ nullable: true })
+  @Column('text', { nullable: true })
+  img: string;
+
+  @Column('bool', { default: false })
+  google: boolean;
+
+  @Column('bool', { default: false })
+  facebook: boolean;
+
+  @Column('text', { default: null })
+  tokenRecovery: string;
+
+  @Column('date', { nullable: true })
   birthday: Date;
 
-  @Column({ nullable: true })
+  @Column('varchar', { nullable: true })
   profession: string;
 
-  @Column({ nullable: true })
+  @Column('varchar', { nullable: true })
   education: string;
 
-  @Column({ nullable: true })
+  @Column('text', { nullable: true })
   cvUrl: string;
 
-  @Column({ nullable: true })
+  @Column('varchar', { nullable: true })
   linkedinUser: string;
 
-  @Column({ nullable: true })
+  @Column('varchar', { nullable: true })
   twitterUser: string;
 
-  @Column({ nullable: true })
+  @Column('varchar', { nullable: true })
   instagramUser: string;
 
-  @Column({ nullable: true })
+  @Column('varchar', { nullable: true })
   facebookUser: string;
+
+  @Column('bool', { default: true })
+  active: boolean;
 
   @BeforeInsert()
   generatedId() {
