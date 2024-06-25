@@ -30,8 +30,8 @@ export class CreateUserDto implements UserModel {
   @IsUrl()
   img: string;
 
-  @IsDateString({}, { message: 'Formato de fecha de nacimiento no válido' })
   @IsOptional()
+  @IsDateString({}, { message: 'Formato de fecha de nacimiento no válido' })
   birthday: Date;
 
   @IsOptional()

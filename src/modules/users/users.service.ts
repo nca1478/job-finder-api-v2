@@ -24,6 +24,10 @@ export class UsersService {
     return this.repository.findOneByEmail(email);
   }
 
+  findOneWithPassword(email: string): Promise<UserEntity> {
+    return this.repository.findOneWithPassword(email);
+  }
+
   update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     return this.repository.update(id, updateUserDto);
   }
@@ -34,7 +38,7 @@ export class UsersService {
 
   async login(loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;
-    const user = await this.findOneByEmail(email);
+    const user = await this.findOneWithPassword(email);
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException(

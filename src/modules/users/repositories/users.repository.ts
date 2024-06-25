@@ -51,6 +51,21 @@ export class UsersRepository {
     return user;
   }
 
+  async findOneWithPassword(email: string): Promise<UserEntity> {
+    const user = await this.usersRepo.findOne({
+      where: { email },
+      select: ['id', 'name', 'email', 'password'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `Usuario con email ${email} no fué encontrado`,
+      );
+    }
+
+    return user;
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const user = await this.usersRepo.preload({
       ...updateUserDto,
@@ -61,7 +76,11 @@ export class UsersRepository {
       throw new NotFoundException(`Usuario con ID ${id} no fué encontrado`);
     }
 
-    return this.usersRepo.save(user);
+    await this.usersRepo.save(user);
+
+    delete user.password;
+
+    return user;
   }
 
   async remove(id: string): Promise<UserEntity> {
