@@ -1,11 +1,13 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DatabaseInterceptor } from './common/errors/interceptors/database.interceptor';
 import { ResponseInterceptor } from './common/interceptors/response/response.interceptor';
+import { UnauthorizedExceptionFilter } from './common/errors/filters/unauthorized-exception/unauthorized-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const adapterHost = app.get(HttpAdapterHost);
 
   app.setGlobalPrefix('api/v2');
 
@@ -17,6 +19,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // exceptions filters
+  app.useGlobalFilters(new UnauthorizedExceptionFilter(adapterHost));
 
   // interceptors
   app.useGlobalInterceptors(new ResponseInterceptor());
