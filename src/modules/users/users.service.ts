@@ -1,43 +1,116 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
-import { UsersRepository } from './repositories/users.repository';
 import { UserEntity } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly usersRepository: UsersRepository,
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
     private readonly authService: AuthService,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    return this.usersRepository.create(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const newUser = this.usersRepository.create(createUserDto);
+
+    await this.usersRepository.save(newUser);
+
+    delete newUser.password;
+
+    return newUser;
   }
 
-  findAll(): Promise<UserEntity[]> {
-    return this.usersRepository.findAll();
+  async findAll(): Promise<UserEntity[]> {
+    return this.usersRepository.find();
   }
 
-  findOne(id: string): Promise<UserEntity> {
-    return this.usersRepository.findOne(id);
+  async findOne(id: string): Promise<UserEntity> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no fué encontrado`);
+    }
+
+    return user;
   }
 
-  findOneByEmail(email: string): Promise<UserEntity> {
-    return this.usersRepository.findOneByEmail(email);
+  async findOneByEmail(email: string): Promise<UserEntity> {
+    const user = await this.usersRepository.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `Usuario con email ${email} no fué encontrado`,
+      );
+    }
+
+    return user;
   }
 
-  findOneWithPassword(email: string): Promise<UserEntity> {
-    return this.usersRepository.findOneWithPassword(email);
+  async findOneWithPassword(email: string): Promise<UserEntity> {
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      select: [
+        'id',
+        'name',
+        'email',
+        'password',
+        'role',
+        'img',
+        'google',
+        'facebook',
+        'cvUrl',
+        'createdAt',
+      ],
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `Usuario con email ${email} no fué encontrado`,
+      );
+    }
+
+    return user;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
-    return this.usersRepository.update(id, updateUserDto);
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    const user = await this.usersRepository.preload({
+      ...updateUserDto,
+      id,
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no fué encontrado`);
+    }
+
+    await this.usersRepository.save(user);
+
+    delete user.password;
+
+    return user;
   }
 
-  remove(id: string): Promise<UserEntity> {
-    return this.usersRepository.remove(id);
+  async remove(id: string): Promise<UserEntity> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no fué encontrado`);
+    }
+
+    return this.usersRepository.remove(user);
   }
 
   async login(loginUserDto: LoginUserDto) {
