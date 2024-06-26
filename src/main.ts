@@ -6,6 +6,8 @@ import { DatabaseInterceptor } from './common/errors/interceptors/database.inter
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api/v2');
+
   // validation pipes
   app.useGlobalPipes(
     new ValidationPipe({
