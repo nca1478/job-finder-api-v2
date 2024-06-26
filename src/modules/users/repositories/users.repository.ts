@@ -54,7 +54,18 @@ export class UsersRepository {
   async findOneWithPassword(email: string): Promise<UserEntity> {
     const user = await this.usersRepo.findOne({
       where: { email },
-      select: ['id', 'name', 'email', 'password'],
+      select: [
+        'id',
+        'name',
+        'email',
+        'password',
+        'role',
+        'img',
+        'google',
+        'facebook',
+        'cvUrl',
+        'createdAt',
+      ],
     });
 
     if (!user) {
