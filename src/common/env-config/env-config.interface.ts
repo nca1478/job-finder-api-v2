@@ -6,4 +6,7 @@ export interface EnvConfig {
   getDbUsername(): string;
   getDbPassword(): string;
   getDbName(): string;
+  getJwtSecret(): string;
+  getJwtExpiration(): string;
+  getJwtAlgorithm(): string;
 }

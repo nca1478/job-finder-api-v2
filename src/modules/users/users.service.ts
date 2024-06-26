@@ -3,37 +3,41 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
 import { UsersRepository } from './repositories/users.repository';
 import { UserEntity } from './entities/user.entity';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly repository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly authService: AuthService,
+  ) {}
 
   create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    return this.repository.create(createUserDto);
+    return this.usersRepository.create(createUserDto);
   }
 
   findAll(): Promise<UserEntity[]> {
-    return this.repository.findAll();
+    return this.usersRepository.findAll();
   }
 
   findOne(id: string): Promise<UserEntity> {
-    return this.repository.findOne(id);
+    return this.usersRepository.findOne(id);
   }
 
   findOneByEmail(email: string): Promise<UserEntity> {
-    return this.repository.findOneByEmail(email);
+    return this.usersRepository.findOneByEmail(email);
   }
 
   findOneWithPassword(email: string): Promise<UserEntity> {
-    return this.repository.findOneWithPassword(email);
+    return this.usersRepository.findOneWithPassword(email);
   }
 
   update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
-    return this.repository.update(id, updateUserDto);
+    return this.usersRepository.update(id, updateUserDto);
   }
 
   remove(id: string): Promise<UserEntity> {
-    return this.repository.remove(id);
+    return this.usersRepository.remove(id);
   }
 
   async login(loginUserDto: LoginUserDto) {
@@ -48,6 +52,11 @@ export class UsersService {
 
     delete user.password;
 
-    return user;
+    const token = await this.authService.createJwtToken({ ...user });
+
+    return {
+      ...user,
+      token,
+    };
   }
 }
