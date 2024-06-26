@@ -28,7 +28,9 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException(`User not found`);
+      throw new UnauthorizedException(
+        `Usuario con ID ${payload.id} no fué encontrado`,
+      );
     }
 
     return user;

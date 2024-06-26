@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DatabaseInterceptor } from './common/errors/interceptors/database.interceptor';
+import { ResponseInterceptor } from './common/interceptors/response/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,7 @@ async function bootstrap() {
   );
 
   // interceptors
+  app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalInterceptors(new DatabaseInterceptor());
 
   await app.listen(3000);

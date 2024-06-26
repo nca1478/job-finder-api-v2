@@ -128,7 +128,7 @@ export class UsersService {
     const token = await this.authService.createJwtToken({ ...user });
 
     return {
-      ...user,
+      user,
       token,
     };
   }
