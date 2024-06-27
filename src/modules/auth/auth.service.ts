@@ -28,9 +28,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException(
-        `Usuario con ID ${payload.id} no fué encontrado`,
-      );
+      throw new UnauthorizedException(`Acceso no autorizado`);
     }
 
     return user;
@@ -40,7 +38,7 @@ export class AuthService {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-      throw new BadRequestException('Bad request.');
+      throw new BadRequestException('Token no válido');
     }
 
     const [, token] = authHeader.split(' ');

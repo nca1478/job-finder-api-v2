@@ -1,11 +1,11 @@
+import { Response } from 'express';
+import { HttpAdapterHost } from '@nestjs/core';
 import {
   ExceptionFilter,
   Catch,
   ArgumentsHost,
   UnauthorizedException,
 } from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
-import { Response } from 'express';
 
 @Catch(UnauthorizedException)
 export class UnauthorizedExceptionFilter implements ExceptionFilter {

@@ -11,7 +11,6 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v2');
 
-  // validation pipes
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -20,10 +19,8 @@ async function bootstrap() {
     }),
   );
 
-  // exceptions filters
   app.useGlobalFilters(new UnauthorizedExceptionFilter(adapterHost));
 
-  // interceptors
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalInterceptors(new DatabaseInterceptor());
 
