@@ -1,18 +1,18 @@
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
+import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import {
   BadRequestException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserEntity } from '../users/entities/user.entity';
 import { LoginUserDto } from './dto';
 import { UsersService } from '../users/users.service';
 import { UserProfile } from './interfaces/profile.interface';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +37,7 @@ export class AuthService {
     return user;
   }
 
-  public async validateUserGoogle(profile: UserProfile) {
+  public async validateUserGoogle(profile: UserProfile): Promise<UserEntity> {
     const user = await this.usersRepository.findOneBy({ email: profile.email });
 
     if (user) return user;
@@ -46,6 +46,7 @@ export class AuthService {
       name: profile.displayName,
       email: profile.email,
       password: 'N@_P@@55w0rd',
+      google: true,
     };
 
     return await this.usersService.create(newUser);

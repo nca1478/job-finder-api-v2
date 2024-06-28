@@ -46,4 +46,16 @@ export class EnvConfigService implements EnvConfig {
   getJwtAlgorithm(): Algorithm {
     return this.configService.getOrThrow<Algorithm>('JWT_ALGORITHM');
   }
+
+  getGoogleClientId(): string {
+    return this.configService.getOrThrow<string>('GOOGLE_CLIENT_ID');
+  }
+
+  getGoogleClientSecret(): string {
+    return this.configService.getOrThrow<string>('GOOGLE_CLIENT_SECRET');
+  }
+
+  getGoogleCallbackUrl(): string {
+    return this.configService.getOrThrow<string>('GOOGLE_CALLBACK_URL');
+  }
 }
