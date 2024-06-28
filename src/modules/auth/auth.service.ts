@@ -10,10 +10,15 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserEntity } from '../users/entities/user.entity';
 import { LoginUserDto } from './dto';
 import { UsersService } from '../users/users.service';
+import { UserProfile } from './interfaces/profile.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
@@ -30,6 +35,20 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  public async validateUserGoogle(profile: UserProfile) {
+    const user = await this.usersRepository.findOneBy({ email: profile.email });
+
+    if (user) return user;
+
+    const newUser = {
+      name: profile.displayName,
+      email: profile.email,
+      password: 'N@_P@@55w0rd',
+    };
+
+    return await this.usersService.create(newUser);
   }
 
   private static jwtExtractor(req: Request): string {

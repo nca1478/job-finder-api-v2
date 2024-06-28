@@ -6,10 +6,12 @@ import {
   HttpStatus,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { LoginUserDto } from './dto';
 import { AuthService } from './auth.service';
+import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -22,11 +24,13 @@ export class AuthController {
   }
 
   @Get('/google')
+  @UseGuards(GoogleAuthGuard)
   loginGoogle() {
     return { msg: 'Google Login' };
   }
 
   @Get('/google/redirect')
+  @UseGuards(GoogleAuthGuard)
   loginGoogleRedirect() {
     return { msg: 'Google Redirect' };
   }

@@ -28,31 +28,31 @@ export class CreateUserDto implements UserModel {
 
   @IsOptional()
   @IsUrl()
-  img: string;
+  img?: string;
 
   @IsOptional()
   @IsDateString({}, { message: 'Formato de fecha de nacimiento no válido' })
-  birthday: Date;
+  birthday?: Date;
 
   @IsOptional()
-  profession: string;
+  profession?: string;
 
   @IsOptional()
-  education: string;
+  education?: string;
 
   @IsOptional()
   @IsUrl()
-  cvUrl: string;
+  cvUrl?: string;
 
   @IsOptional()
-  linkedinUser: string;
+  linkedinUser?: string;
 
   @IsOptional()
-  twitterUser: string;
+  twitterUser?: string;
 
   @IsOptional()
-  instagramUser: string;
+  instagramUser?: string;
 
   @IsOptional()
-  facebookUser: string;
+  facebookUser?: string;
 }
