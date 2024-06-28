@@ -1,4 +1,13 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+} from '@nestjs/common';
+import { Request } from 'express';
 import { LoginUserDto } from './dto';
 import { AuthService } from './auth.service';
 
@@ -10,5 +19,20 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
+  }
+
+  @Get('/google')
+  loginGoogle() {
+    return { msg: 'Google Login' };
+  }
+
+  @Get('/google/redirect')
+  loginGoogleRedirect() {
+    return { msg: 'Google Redirect' };
+  }
+
+  @Get('/google/status')
+  loginGoogleStatus(@Req() request: Request) {
+    return { msg: 'Google Authentication Status' };
   }
 }
