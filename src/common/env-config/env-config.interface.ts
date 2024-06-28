@@ -12,4 +12,5 @@ export interface EnvConfig {
   getGoogleClientId(): string;
   getGoogleClientSecret(): string;
   getGoogleCallbackUrl(): string;
+  getApiSessionKey(): string;
 }

@@ -8,6 +8,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { UsersService } from '../users/users.service';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { SessionSerializer } from './utils/Serializer';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
     GoogleStrategy,
     JwtStrategy,
     JwtModule,
+    SessionSerializer,
     UsersService,
   ],
   exports: [AuthService],

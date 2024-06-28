@@ -6,9 +6,10 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { LoginUserDto } from './dto';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
@@ -31,12 +32,14 @@ export class AuthController {
 
   @Get('/google/redirect')
   @UseGuards(GoogleAuthGuard)
-  loginGoogleRedirect() {
-    return { msg: 'Google Redirect' };
+  loginGoogleRedirect(@Res() res: Response) {
+    return res.redirect('/api/v2');
   }
 
   @Get('/google/status')
   loginGoogleStatus(@Req() request: Request) {
-    return { msg: 'Google Authentication Status' };
+    if (request.user) return { msg: 'Authenticated!!!' };
+
+    return { msg: 'Not Authenticated!!!' };
   }
 }

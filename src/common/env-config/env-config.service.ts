@@ -58,4 +58,8 @@ export class EnvConfigService implements EnvConfig {
   getGoogleCallbackUrl(): string {
     return this.configService.getOrThrow<string>('GOOGLE_CALLBACK_URL');
   }
+
+  getApiSessionKey(): string {
+    return this.configService.getOrThrow<string>('SESSION_KEY');
+  }
 }
