@@ -1,21 +1,14 @@
-import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { UserEntity } from './entities/user.entity';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
-    private readonly authService: AuthService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
@@ -111,25 +104,5 @@ export class UsersService {
     }
 
     return this.usersRepository.remove(user);
-  }
-
-  async login(loginUserDto: LoginUserDto) {
-    const { email, password } = loginUserDto;
-    const user = await this.findOneWithPassword(email);
-
-    if (!user || !bcrypt.compareSync(password, user.password)) {
-      throw new UnauthorizedException(
-        'Credenciales no validas (email o password)',
-      );
-    }
-
-    delete user.password;
-
-    const token = await this.authService.createJwtToken({ ...user });
-
-    return {
-      user,
-      token,
-    };
   }
 }

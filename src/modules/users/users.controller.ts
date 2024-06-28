@@ -7,14 +7,12 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
-  HttpCode,
-  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { UserEntity } from './entities/user.entity';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Controller('users')
 export class UsersController {
@@ -50,11 +48,5 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   remove(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
     return this.usersService.remove(id);
-  }
-
-  @Post('/login')
-  @HttpCode(HttpStatus.OK)
-  login(@Body() loginUserDto: LoginUserDto) {
-    return this.usersService.login(loginUserDto);
   }
 }

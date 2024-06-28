@@ -5,6 +5,8 @@ import { AuthService } from './auth.service';
 import { EnvConfigModule, EnvConfigService } from '../../common/env-config';
 import { UserEntity } from '../users/entities/user.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthController } from './auth.controller';
+import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [
@@ -24,7 +26,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
     TypeOrmModule.forFeature([UserEntity]),
   ],
-  providers: [AuthService, JwtStrategy, JwtModule],
+  providers: [AuthService, JwtStrategy, JwtModule, UsersService],
   exports: [AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}

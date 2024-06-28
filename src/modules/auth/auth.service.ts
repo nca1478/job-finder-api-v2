@@ -1,7 +1,6 @@
+import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
 import {
   BadRequestException,
   Injectable,
@@ -9,12 +8,13 @@ import {
 } from '@nestjs/common';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserEntity } from '../users/entities/user.entity';
+import { LoginUserDto } from './dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly usersRepository: Repository<UserEntity>,
+    private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -23,9 +23,7 @@ export class AuthService {
   }
 
   public async validateUser(payload: JwtPayload): Promise<UserEntity> {
-    const user = await this.usersRepository.findOne({
-      where: { id: payload.id },
-    });
+    const user = await this.usersService.findOne(payload.id);
 
     if (!user) {
       throw new UnauthorizedException(`Acceso no autorizado`);
@@ -48,5 +46,25 @@ export class AuthService {
 
   public returnJwtExtractor(): (req: Request) => string {
     return AuthService.jwtExtractor;
+  }
+
+  async login(loginUserDto: LoginUserDto) {
+    const { email, password } = loginUserDto;
+    const user = await this.usersService.findOneWithPassword(email);
+
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      throw new UnauthorizedException(
+        'Credenciales no validas (email o password)',
+      );
+    }
+
+    delete user.password;
+
+    const token = await this.createJwtToken({ ...user });
+
+    return {
+      user,
+      token,
+    };
   }
 }
