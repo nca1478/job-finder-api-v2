@@ -26,18 +26,18 @@ export class AuthController {
 
   @Get('/google')
   @UseGuards(GoogleAuthGuard)
-  loginGoogle() {
-    return { msg: 'Google Login' };
+  googleLogin() {
+    return HttpStatus.OK;
   }
 
   @Get('/google/redirect')
   @UseGuards(GoogleAuthGuard)
-  loginGoogleRedirect(@Res() res: Response) {
+  googleLoginRedirect(@Res() res: Response) {
     return res.redirect('/api/v2');
   }
 
   @Get('/google/status')
-  loginGoogleStatus(@Req() request: Request) {
+  googleLoginStatus(@Req() request: Request) {
     if (request.user) return { msg: 'Authenticated!!!' };
 
     return { msg: 'Not Authenticated!!!' };
