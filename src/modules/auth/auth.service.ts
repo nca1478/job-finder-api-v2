@@ -8,11 +8,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserEntity } from '../users/entities/user.entity';
 import { LoginUserDto } from './dto';
 import { UsersService } from '../users/users.service';
-import { UserProfile } from './interfaces/profile.interface';
+import { GooglePayload, JwtPayload } from './interfaces';
 
 @Injectable()
 export class AuthService {
@@ -37,14 +36,14 @@ export class AuthService {
     return user;
   }
 
-  public async validateUserGoogle(profile: UserProfile): Promise<UserEntity> {
-    const user = await this.usersRepository.findOneBy({ email: profile.email });
+  public async validateUserGoogle(payload: GooglePayload): Promise<UserEntity> {
+    const user = await this.usersRepository.findOneBy({ email: payload.email });
 
     if (user) return user;
 
     const newUser = {
-      name: profile.displayName,
-      email: profile.email,
+      name: payload.displayName,
+      email: payload.email,
       password: 'N@_P@@55w0rd',
       google: true,
     };

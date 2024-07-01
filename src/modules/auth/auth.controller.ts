@@ -13,6 +13,7 @@ import { Request, Response } from 'express';
 import { LoginUserDto } from './dto';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -38,8 +39,20 @@ export class AuthController {
 
   @Get('/google/status')
   googleLoginStatus(@Req() request: Request) {
-    if (request.user) return { msg: 'Authenticated!!!' };
+    if (request.user) return { msg: 'Google Authenticated!!!' };
 
-    return { msg: 'Not Authenticated!!!' };
+    return { msg: 'Google Not Authenticated!!!' };
+  }
+
+  @Get('/facebook')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookLogin(): Promise<any> {
+    return HttpStatus.OK;
+  }
+
+  @Get('/facebook/redirect')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookLoginRedirect(@Req() req: Request): Promise<any> {
+    return req.user;
   }
 }
