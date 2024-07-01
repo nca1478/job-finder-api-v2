@@ -62,4 +62,16 @@ export class EnvConfigService implements EnvConfig {
   getApiSessionKey(): string {
     return this.configService.getOrThrow<string>('SESSION_KEY');
   }
+
+  getFacebookAppId(): string {
+    return this.configService.getOrThrow<string>('FACEBOOK_APP_ID');
+  }
+
+  getFacebookAppSecretKey(): string {
+    return this.configService.getOrThrow<string>('FACEBOOK_APP_SECRET_KEY');
+  }
+
+  getFacebookCallbackUrl(): string {
+    return this.configService.getOrThrow<string>('FACEBOOK_CALLBACK_URL');
+  }
 }

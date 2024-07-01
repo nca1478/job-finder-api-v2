@@ -13,4 +13,7 @@ export interface EnvConfig {
   getGoogleClientSecret(): string;
   getGoogleCallbackUrl(): string;
   getApiSessionKey(): string;
+  getFacebookAppId(): string;
+  getFacebookAppSecretKey(): string;
+  getFacebookCallbackUrl(): string;
 }
