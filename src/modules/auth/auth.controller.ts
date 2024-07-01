@@ -9,11 +9,11 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { LoginUserDto } from './dto';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -33,13 +33,14 @@ export class AuthController {
 
   @Get('/google/redirect')
   @UseGuards(GoogleAuthGuard)
-  googleLoginRedirect(@Res() res: Response) {
-    return res.redirect('/api/v2');
+  googleLoginRedirect(@Req() req: Request) {
+    // return res.redirect('/api/v2');
+    return req.user;
   }
 
   @Get('/google/status')
-  googleLoginStatus(@Req() request: Request) {
-    if (request.user) return { msg: 'Google Authenticated!!!' };
+  googleLoginStatus(@Req() req: Request) {
+    if (req.user) return { msg: 'Google Authenticated!!!' };
 
     return { msg: 'Google Not Authenticated!!!' };
   }
@@ -53,6 +54,7 @@ export class AuthController {
   @Get('/facebook/redirect')
   @UseGuards(AuthGuard('facebook'))
   async facebookLoginRedirect(@Req() req: Request): Promise<any> {
+    // return res.redirect('/api/v2');
     return req.user;
   }
 }

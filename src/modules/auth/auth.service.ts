@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { LoginUserDto } from './dto';
 import { UsersService } from '../users/users.service';
-import { GooglePayload, JwtPayload } from './interfaces';
+import { FacebookPayload, GooglePayload, JwtPayload } from './interfaces';
 
 @Injectable()
 export class AuthService {
@@ -46,6 +46,23 @@ export class AuthService {
       email: payload.email,
       password: 'N@_P@@55w0rd',
       google: true,
+    };
+
+    return await this.usersService.create(newUser);
+  }
+
+  public async validateUserFacebook(
+    payload: FacebookPayload,
+  ): Promise<UserEntity> {
+    const user = await this.usersRepository.findOneBy({ email: payload.email });
+
+    if (user) return user;
+
+    const newUser = {
+      name: payload.firstName + ' ' + payload.lastName,
+      email: payload.email,
+      password: 'N@_P@@55w0rd',
+      facebook: true,
     };
 
     return await this.usersService.create(newUser);
