@@ -13,6 +13,8 @@ async function bootstrap() {
   const adapterHost = app.get(HttpAdapterHost);
   const configService = app.get<EnvConfigService>(EnvConfigService);
 
+  app.enableCors();
+
   app.setGlobalPrefix('api/v2');
 
   app.useGlobalPipes(
