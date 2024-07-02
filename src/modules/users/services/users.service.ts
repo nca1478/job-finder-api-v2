@@ -1,8 +1,13 @@
+import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserEntity } from '../entities/user.entity';
-import { CreateUserDto, UpdateUserDto } from '../dto';
+import { CreateUserDto, UpdateUserDto, VerifyUserDto } from '../dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 
 @Injectable()
@@ -119,5 +124,21 @@ export class UsersService {
     }
 
     return this.usersRepository.remove(user);
+  }
+
+  async verify(verifyUserDto: VerifyUserDto): Promise<UserEntity> {
+    const { email, password } = verifyUserDto;
+
+    const user = await this.findOneWithPassword(email);
+
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      throw new UnauthorizedException(
+        'Credenciales no validas (email o password)',
+      );
+    }
+
+    delete user.password;
+
+    return user;
   }
 }

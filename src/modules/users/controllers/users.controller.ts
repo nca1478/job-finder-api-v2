@@ -9,10 +9,12 @@ import {
   ParseUUIDPipe,
   UseGuards,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserEntity } from '../entities/user.entity';
-import { CreateUserDto, UpdateUserDto } from '../dto';
+import { CreateUserDto, UpdateUserDto, VerifyUserDto } from '../dto';
 import { UsersService } from '../services/users.service';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
 
@@ -52,5 +54,11 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   remove(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
     return this.usersService.remove(id);
+  }
+
+  @Post('/verify')
+  @HttpCode(HttpStatus.OK)
+  verify(@Body() verifyUserDto: VerifyUserDto): Promise<UserEntity> {
+    return this.usersService.verify(verifyUserDto);
   }
 }
