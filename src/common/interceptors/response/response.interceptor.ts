@@ -51,8 +51,8 @@ export class ResponseInterceptor implements NestInterceptor {
       success: true,
       statusCode,
       path: request.url,
-      data: res,
-      meta: null,
+      data: res.data ? res.data : res,
+      meta: res.meta ? res.meta : null,
       errors: null,
     };
   }

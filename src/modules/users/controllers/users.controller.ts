@@ -8,11 +8,13 @@ import {
   Delete,
   ParseUUIDPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserEntity } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dto';
 import { UsersService } from '../services/users.service';
+import { PageDto, PageOptionsDto } from '../../../common/dtos';
 
 @Controller('users')
 export class UsersController {
@@ -25,8 +27,10 @@ export class UsersController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  findAll(): Promise<UserEntity[]> {
-    return this.usersService.findAll();
+  findAll(
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<UserEntity>> {
+    return this.usersService.findAll(pageOptionsDto);
   }
 
   @Get(':id')

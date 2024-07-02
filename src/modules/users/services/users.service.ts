@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserEntity } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dto';
+import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 
 @Injectable()
 export class UsersService {
@@ -21,8 +22,22 @@ export class UsersService {
     return newUser;
   }
 
-  async findAll(): Promise<UserEntity[]> {
-    return this.usersRepository.find();
+  async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<UserEntity>> {
+    const queryBuilder = this.usersRepository.createQueryBuilder('u');
+
+    queryBuilder
+      .orderBy('u.createdAt', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+    return new PageDto(entities, pageMetaDto);
+
+    // return this.usersRepository.find();
   }
 
   async findOne(id: string): Promise<UserEntity> {
