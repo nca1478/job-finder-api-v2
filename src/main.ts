@@ -1,7 +1,7 @@
 import * as passport from 'passport';
 import * as session from 'express-session';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DatabaseInterceptor } from './common/errors/interceptors/database.interceptor';
 import { ResponseInterceptor } from './common/interceptors/response/response.interceptor';
