@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { EnvConfigModule, EnvConfigService } from '../../common/env-config';
-import { UserEntity } from '../users/entities/user.entity';
-import { AuthController } from './auth.controller';
-import { UsersService } from '../users/users.service';
-import { SessionSerializer } from './utils/Serializer';
 import { FacebookStrategy, GoogleStrategy, JwtStrategy } from './strategies';
+import { UsersService } from '../users/services/users.service';
+import { AuthController } from './controllers/auth.controller';
+import { UserEntity } from '../users/entities/user.entity';
+import { SessionSerializer } from './utils/Serializer';
 
 @Module({
   imports: [

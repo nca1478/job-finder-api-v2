@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import { LoginUserDto } from './dto';
-import { AuthService } from './auth.service';
-import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
+import { AuthService } from '../services/auth.service';
+import { LoginUserDto } from '../dto';
+import { GoogleAuthGuard } from '../guards/google-auth/google-auth.guard';
 
 @Controller('auth')
 export class AuthController {

@@ -8,10 +8,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../users/entities/user.entity';
-import { LoginUserDto } from './dto';
-import { UsersService } from '../users/users.service';
-import { FacebookPayload, GooglePayload, JwtPayload } from './interfaces';
+import { UsersService } from '../../../modules/users/services/users.service';
+import { FacebookPayload, GooglePayload, JwtPayload } from '../interfaces';
+import { UserEntity } from '../../users/entities/user.entity';
+import { LoginUserDto } from '../dto';
 
 @Injectable()
 export class AuthService {
