@@ -18,4 +18,6 @@ export interface EnvConfig {
   getFacebookCallbackUrl(): string;
   getSendgridAccessKey(): string;
   getSendgridFromEmail(): string;
+  getSendgridSandboxMode(): boolean;
+  getUrlClient(): string;
 }

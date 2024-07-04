@@ -82,4 +82,14 @@ export class EnvConfigService implements EnvConfig {
   getSendgridFromEmail(): string {
     return this.configService.getOrThrow<string>('SENDGRID_FROM_EMAIL');
   }
+
+  getSendgridSandboxMode(): boolean {
+    return Boolean(
+      this.configService.getOrThrow<boolean>('SENDGRID_SANDBOX_MODE'),
+    );
+  }
+
+  getUrlClient(): string {
+    return this.configService.getOrThrow<string>('URL_CLIENT');
+  }
 }
