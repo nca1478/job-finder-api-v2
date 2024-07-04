@@ -16,4 +16,6 @@ export interface EnvConfig {
   getFacebookAppId(): string;
   getFacebookAppSecretKey(): string;
   getFacebookCallbackUrl(): string;
+  getSendgridAccessKey(): string;
+  getSendgridFromEmail(): string;
 }

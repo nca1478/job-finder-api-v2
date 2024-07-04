@@ -74,4 +74,12 @@ export class EnvConfigService implements EnvConfig {
   getFacebookCallbackUrl(): string {
     return this.configService.getOrThrow<string>('FACEBOOK_CALLBACK_URL');
   }
+
+  getSendgridAccessKey(): string {
+    return this.configService.getOrThrow<string>('SENDGRID_ACCESS_KEY');
+  }
+
+  getSendgridFromEmail(): string {
+    return this.configService.getOrThrow<string>('SENDGRID_FROM_EMAIL');
+  }
 }
