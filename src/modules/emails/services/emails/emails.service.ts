@@ -1,6 +1,7 @@
+import { Injectable } from '@nestjs/common';
 import { SendGridService } from '@anchan828/nest-sendgrid';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { EnvConfigService } from '../../../../common/env-config';
+import { changePasswordEmail } from '../../templates';
 
 @Injectable()
 export class EmailsService {
@@ -13,18 +14,12 @@ export class EmailsService {
     const subject = 'Solicitud de cambio de contraseña';
     const urlClient = this.configService.getUrlClient();
     const urlRedirect = `${urlClient}/change-password?token=${token}`;
-    const templateHTML = `
-		    <h1>Instrucciones para cambiar la contraseña</h1>
-        <p>
-            Recibimos una solicitud para cambiar la contraseña. Este enlace es válido durante las próximas 24 horas: &nbsp;
-            <a href="${urlRedirect}">Recuperar contraseña</a>
-        </p>
-	    `;
+    const templateHTML = changePasswordEmail(urlRedirect);
 
-    return this.sendEmail({ email, subject, templateHTML });
+    return await this.sendEmail({ email, subject, templateHTML });
   }
 
-  private async sendEmail(emailInfo: any) {
+  private async sendEmail(emailInfo: any): Promise<any> {
     const { email, subject, templateHTML } = emailInfo;
 
     const msg: any = {

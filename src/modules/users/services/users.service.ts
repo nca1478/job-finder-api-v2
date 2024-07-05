@@ -152,7 +152,7 @@ export class UsersService {
     return user;
   }
 
-  async sendEmailChangePass(changePassDto: ChangePassDto) {
+  async sendEmailChangePass(changePassDto: ChangePassDto): Promise<any> {
     const { email } = changePassDto;
 
     const user = await this.findOneByEmail(email);
@@ -169,7 +169,7 @@ export class UsersService {
 
     try {
       await this.emailService.changePassEmail(email, tokenRecovery);
-      return true;
+      return { msg: 'Email enviado exitosamente.' };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

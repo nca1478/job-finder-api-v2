@@ -69,7 +69,7 @@ export class UsersController {
   }
 
   @Put('/change-password')
-  sendEmailChangePass(@Body() changePassDto: ChangePassDto) {
+  sendEmailChangePass(@Body() changePassDto: ChangePassDto): Promise<object> {
     return this.usersService.sendEmailChangePass(changePassDto);
   }
 }
