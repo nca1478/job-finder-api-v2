@@ -10,10 +10,21 @@ export class EmailsService {
     private readonly sendgridService: SendGridService,
   ) {}
 
+  get urlClient(): string {
+    return this.configService.getUrlClient();
+  }
+
+  get fromEmail(): string {
+    return this.configService.getSendgridFromEmail();
+  }
+
+  get sanboxEnable(): boolean {
+    return this.configService.getSendgridSandboxMode();
+  }
+
   async changePassEmail(email: string, token: string): Promise<any> {
     const subject = 'Solicitud de cambio de contraseña';
-    const urlClient = this.configService.getUrlClient();
-    const urlRedirect = `${urlClient}/change-password?token=${token}`;
+    const urlRedirect = `${this.urlClient}/change-password?token=${token}`;
     const templateHTML = changePasswordEmail(urlRedirect);
 
     return await this.sendEmail({ email, subject, templateHTML });
@@ -24,12 +35,12 @@ export class EmailsService {
 
     const msg: any = {
       to: email,
-      from: `Jobfinder App <${this.configService.getSendgridFromEmail()}>`,
+      from: `Jobfinder App <${this.fromEmail}>`,
       subject,
       text: 'Jobfinder App',
       html: templateHTML,
       mailSettings: {
-        sandboxMode: { enable: this.configService.getSendgridSandboxMode() },
+        sandboxMode: { enable: this.sanboxEnable },
       },
     };
 
