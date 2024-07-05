@@ -16,7 +16,8 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { UserEntity } from '../entities/user.entity';
 import {
-  ChangePassDto,
+  ChangePassEmailDto,
+  ChangePasswordDto,
   CreateUserDto,
   UpdateUserDto,
   VerifyUserDto,
@@ -69,7 +70,17 @@ export class UsersController {
   }
 
   @Put('/change-password')
-  sendEmailChangePass(@Body() changePassDto: ChangePassDto): Promise<object> {
-    return this.usersService.sendEmailChangePass(changePassDto);
+  sendEmailChangePass(
+    @Body() changePassEmailDto: ChangePassEmailDto,
+  ): Promise<any> {
+    return this.usersService.sendEmailChangePass(changePassEmailDto);
+  }
+
+  @Put('/change-password/:token')
+  changePass(
+    @Param('token') token: string,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ): Promise<any> {
+    return this.usersService.changePassword(changePasswordDto, token);
   }
 }

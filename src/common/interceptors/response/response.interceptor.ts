@@ -33,7 +33,7 @@ export class ResponseInterceptor implements NestInterceptor {
     response.status(status).json({
       success: false,
       statusCode: status,
-      path: request.url,
+      // path: request.url,
       data: null,
       meta: null,
       errors: { msg: message },
@@ -50,7 +50,7 @@ export class ResponseInterceptor implements NestInterceptor {
     return {
       success: true,
       statusCode,
-      path: request.url,
+      // path: request.url,
       data: res.data || res,
       meta: res.meta || null,
       errors: null,

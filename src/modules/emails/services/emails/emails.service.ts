@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SendGridService } from '@anchan828/nest-sendgrid';
 import { EnvConfigService } from '../../../../common/env-config';
-import { changePasswordEmail } from '../../templates';
+import { changedPasswordEmail, changePasswordEmail } from '../../templates';
 
 @Injectable()
 export class EmailsService {
@@ -30,6 +30,13 @@ export class EmailsService {
     return await this.sendEmail({ email, subject, templateHTML });
   }
 
+  async passChanged(email: string): Promise<any> {
+    const subject = 'Contraseña cambiada exitosamente';
+    const templateHTML = changedPasswordEmail(this.urlClient);
+
+    return await this.sendEmail({ email, subject, templateHTML });
+  }
+
   private async sendEmail(emailInfo: any): Promise<any> {
     const { email, subject, templateHTML } = emailInfo;
 
@@ -39,9 +46,6 @@ export class EmailsService {
       subject,
       text: 'Jobfinder App',
       html: templateHTML,
-      mailSettings: {
-        sandboxMode: { enable: this.sanboxEnable },
-      },
     };
 
     return await this.sendgridService.send(msg);

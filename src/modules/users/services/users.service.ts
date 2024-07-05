@@ -2,7 +2,8 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  ChangePassDto,
+  ChangePassEmailDto,
+  ChangePasswordDto,
   CreateUserDto,
   UpdateUserDto,
   VerifyUserDto,
@@ -83,9 +84,24 @@ export class UsersService {
     return user;
   }
 
+  async findOneByEmailAndToken(
+    email: string,
+    token: string,
+  ): Promise<UserEntity> {
+    const user = await this.usersRepository.findOne({
+      where: { email, tokenRecovery: token },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Email o token no encontrado.');
+    }
+
+    return user;
+  }
+
   async findOneWithPassword(email: string): Promise<UserEntity> {
     const user = await this.usersRepository.findOne({
-      where: { email },
+      where: { email, google: false, facebook: false },
       select: [
         'id',
         'name',
@@ -152,8 +168,10 @@ export class UsersService {
     return user;
   }
 
-  async sendEmailChangePass(changePassDto: ChangePassDto): Promise<any> {
-    const { email } = changePassDto;
+  async sendEmailChangePass(
+    changePassEmailDto: ChangePassEmailDto,
+  ): Promise<any> {
+    const { email } = changePassEmailDto;
 
     const user = await this.findOneByEmail(email);
 
@@ -165,11 +183,29 @@ export class UsersService {
 
     const tokenRecovery = await this.authService.createJwtToken(payload);
 
-    await this.update(user.id, { ...user, tokenRecovery });
+    await this.update(user.id, { tokenRecovery });
 
     try {
       await this.emailService.changePassEmail(email, tokenRecovery);
-      return { msg: 'Email enviado exitosamente.' };
+      return { msg: 'Email enviado exitosamente.', token: tokenRecovery };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async changePassword(changePasswordDto: ChangePasswordDto, token: string) {
+    const { email, newPassword } = changePasswordDto;
+
+    const user = await this.findOneByEmailAndToken(email, token);
+
+    await this.update(user.id, {
+      password: newPassword,
+      tokenRecovery: null,
+    });
+
+    try {
+      await this.emailService.passChanged(email);
+      return { msg: 'Contraseña cambiada exitosamente.' };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

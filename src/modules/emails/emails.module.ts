@@ -5,6 +5,7 @@ import { EnvConfigModule, EnvConfigService } from '../../common/env-config';
 
 @Module({
   imports: [
+    EnvConfigModule,
     SendGridModule.forRootAsync({
       imports: [EnvConfigModule],
       inject: [EnvConfigService],
@@ -15,7 +16,7 @@ import { EnvConfigModule, EnvConfigService } from '../../common/env-config';
       },
     }),
   ],
-  providers: [EmailsService, EnvConfigService],
+  providers: [EmailsService],
   exports: [EmailsService],
 })
 export class EmailsModule {}
