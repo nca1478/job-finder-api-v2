@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -18,7 +20,7 @@ export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
-    private readonly usersService: UsersService,
+    @Inject(forwardRef(() => UsersService)) private usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
 

@@ -11,10 +11,16 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserEntity } from '../entities/user.entity';
-import { CreateUserDto, UpdateUserDto, VerifyUserDto } from '../dto';
+import {
+  ChangePassDto,
+  CreateUserDto,
+  UpdateUserDto,
+  VerifyUserDto,
+} from '../dto';
 import { UsersService } from '../services/users.service';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
 
@@ -60,5 +66,10 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   verify(@Body() verifyUserDto: VerifyUserDto): Promise<UserEntity> {
     return this.usersService.verify(verifyUserDto);
+  }
+
+  @Put('/change-password')
+  sendEmailChangePass(@Body() changePassDto: ChangePassDto) {
+    return this.usersService.sendEmailChangePass(changePassDto);
   }
 }

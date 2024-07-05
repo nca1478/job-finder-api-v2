@@ -2,19 +2,31 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
+  ChangePassDto,
+  CreateUserDto,
+  UpdateUserDto,
+  VerifyUserDto,
+} from '../dto';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserEntity } from '../entities/user.entity';
-import { CreateUserDto, UpdateUserDto, VerifyUserDto } from '../dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
+import { AuthService } from '../../../modules/auth/services/auth.service';
+import { EmailsService } from '../../../modules/emails/services/emails/emails.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    @Inject(forwardRef(() => AuthService)) private authService: AuthService,
+    private readonly emailService: EmailsService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
@@ -59,12 +71,12 @@ export class UsersService {
 
   async findOneByEmail(email: string): Promise<UserEntity> {
     const user = await this.usersRepository.findOne({
-      where: { email },
+      where: { email, google: false, facebook: false },
     });
 
     if (!user) {
       throw new NotFoundException(
-        `Usuario con email ${email} no fué encontrado`,
+        'Email no encontrado o no permite cambiar contraseña.',
       );
     }
 
@@ -89,9 +101,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(
-        `Usuario con email ${email} no fué encontrado`,
-      );
+      throw new NotFoundException('Email no encontrado');
     }
 
     return user;
@@ -140,5 +150,28 @@ export class UsersService {
     delete user.password;
 
     return user;
+  }
+
+  async sendEmailChangePass(changePassDto: ChangePassDto) {
+    const { email } = changePassDto;
+
+    const user = await this.findOneByEmail(email);
+
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+
+    const tokenRecovery = await this.authService.createJwtToken(payload);
+
+    await this.update(user.id, { ...user, tokenRecovery });
+
+    try {
+      await this.emailService.changePassEmail(email, tokenRecovery);
+      return true;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }

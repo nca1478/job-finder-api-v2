@@ -55,4 +55,7 @@ export class CreateUserDto implements UserModel {
 
   @IsOptional()
   facebookUser?: string;
+
+  @IsOptional()
+  tokenRecovery?: string;
 }
