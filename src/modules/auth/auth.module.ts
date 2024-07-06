@@ -36,7 +36,7 @@ import { UsersModule } from '../users/users.module';
     JwtModule,
     SessionSerializer,
   ],
-  exports: [AuthService],
+  exports: [AuthService, JwtModule],
   controllers: [AuthController],
 })
 export class AuthModule {}

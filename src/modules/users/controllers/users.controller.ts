@@ -24,6 +24,7 @@ import {
 } from '../dto';
 import { UsersService } from '../services/users.service';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
+import { JwtValidationPipe } from '../../../common/pipes/jwt-validation/jwt-validation.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -78,7 +79,7 @@ export class UsersController {
 
   @Put('/change-password/:token')
   changePass(
-    @Param('token') token: string,
+    @Param('token', JwtValidationPipe) token: string,
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<any> {
     return this.usersService.changePassword(changePasswordDto, token);
