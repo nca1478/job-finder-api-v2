@@ -20,4 +20,7 @@ export interface EnvConfig {
   getSendgridFromEmail(): string;
   getSendgridSandboxMode(): boolean;
   getUrlClient(): string;
+  getCloudinaryCloudName(): string;
+  getCloudinaryApiKey(): string;
+  getCloudinaryApiSecret(): string;
 }

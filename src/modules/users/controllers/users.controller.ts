@@ -12,6 +12,8 @@ import {
   HttpCode,
   HttpStatus,
   Put,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserEntity } from '../entities/user.entity';
@@ -25,10 +27,22 @@ import {
 import { UsersService } from '../services/users.service';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
 import { JwtValidationPipe } from '../../../common/pipes/jwt-validation/jwt-validation.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
+import { ValidateUser } from '../../../common/decorators';
+import { FilesService } from '../../../modules/files/services/files.service';
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+});
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly filesService: FilesService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
@@ -83,5 +97,16 @@ export class UsersController {
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<any> {
     return this.usersService.changePassword(changePasswordDto, token);
+  }
+
+  @Post(':id/upload-pdf')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FileInterceptor('file', { storage }))
+  async uploadFile(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ValidateUser() user: UserEntity,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return { msg: 'Subida de archivo exitosa', url: file.path };
   }
 }

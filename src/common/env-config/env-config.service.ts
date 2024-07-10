@@ -92,4 +92,16 @@ export class EnvConfigService implements EnvConfig {
   getUrlClient(): string {
     return this.configService.getOrThrow<string>('URL_CLIENT');
   }
+
+  getCloudinaryCloudName(): string {
+    return this.configService.getOrThrow<string>('CLOUDINARY_CLOUD_NAME');
+  }
+
+  getCloudinaryApiKey(): string {
+    return this.configService.getOrThrow<string>('CLOUDINARY_API_KEY');
+  }
+
+  getCloudinaryApiSecret(): string {
+    return this.configService.getOrThrow<string>('CLOUDINARY_API_SECRET');
+  }
 }
