@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { DatabaseModule } from './common/database/database.module';
@@ -9,6 +9,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { EmailsModule } from './modules/emails/emails.module';
 import { UsersModule } from './modules/users/users.module';
 import { FilesModule } from './modules/files/files.module';
+import { ValidateUserMiddleware } from './common/middlewares';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './modules/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -22,15 +25,21 @@ import { FilesModule } from './modules/files/files.module';
       isGlobal: true,
     }),
 
+    FilesModule,
+
+    UsersModule,
+
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
     }),
 
-    UsersModule,
-
-    FilesModule,
+    TypeOrmModule.forFeature([UserEntity]),
   ],
 })
 export class AppModule {
-  constructor() {}
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(ValidateUserMiddleware)
+      .forRoutes({ path: '/users/:id/upload-pdf', method: RequestMethod.POST });
+  }
 }

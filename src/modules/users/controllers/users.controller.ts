@@ -44,6 +44,10 @@ export class UsersController {
     private readonly filesService: FilesService,
   ) {}
 
+  // public static getUsersRoutes() {
+  //   return [{ path: '/users/:id/upload-pdf', method: RequestMethod.POST }];
+  // }
+
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.usersService.create(createUserDto);
@@ -104,7 +108,6 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('file', { storage }))
   async uploadFile(
     @Param('id', ParseUUIDPipe) id: string,
-    @ValidateUser() user: UserEntity,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return { msg: 'Subida de archivo exitosa', url: file.path };
