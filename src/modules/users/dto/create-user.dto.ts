@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { UserModel } from '../models/user.model';
-import { regExp } from '../../../common/utils/regex';
+import { regExp } from '../../../common/utils';
 
 export class CreateUserDto implements UserModel {
   @IsNotEmpty({ message: 'El nombre es requerido' })

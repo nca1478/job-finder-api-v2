@@ -1,7 +1,8 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../../../modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { UserEntity } from '../../../modules/users/entities/user.entity';
+import { responseError } from '../../utils';
 
 @Injectable()
 export class ValidateUserMiddleware implements NestMiddleware {
@@ -18,14 +19,20 @@ export class ValidateUserMiddleware implements NestMiddleware {
       });
 
       if (!user) {
-        return res.status(404).json({ msg: 'Usuario no encontrado' });
+        const error = responseError({ msg: 'Usuario no encontrado' }, 404);
+        return res.status(404).json(error);
       }
 
       req.user = user;
 
       next();
-    } catch (error) {
-      return res.status(500).json({ msg: 'Error interno del servidor' });
+    } catch (err: any) {
+      if (err.errors?.status) {
+        return res.status(err.errors?.status).json(err);
+      }
+
+      const error = responseError([err], err.errors?.status);
+      res.status(500).json(error);
     }
   }
 }

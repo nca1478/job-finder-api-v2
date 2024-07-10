@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
-import { regExp } from '../../../common/utils/regex';
+import { regExp } from '../../../common/utils';
 
 export class ChangePasswordDto {
   @IsNotEmpty({ message: 'El email es requerido' })

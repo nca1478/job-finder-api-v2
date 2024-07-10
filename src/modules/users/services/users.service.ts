@@ -2,13 +2,6 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  ChangePassEmailDto,
-  ChangePasswordDto,
-  CreateUserDto,
-  UpdateUserDto,
-  VerifyUserDto,
-} from '../dto';
-import {
   BadRequestException,
   forwardRef,
   Inject,
@@ -16,6 +9,13 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import {
+  ChangePassEmailDto,
+  ChangePasswordDto,
+  CreateUserDto,
+  UpdateUserDto,
+  VerifyUserDto,
+} from '../dto';
 import { UserEntity } from '../entities/user.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 import { AuthService } from '../../../modules/auth/services/auth.service';

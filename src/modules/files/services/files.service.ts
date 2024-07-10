@@ -11,4 +11,8 @@ export class FilesService {
       api_secret: this.configService.getCloudinaryApiSecret(),
     });
   }
+
+  getFileUploaded(file: Express.Multer.File) {
+    return { msg: 'Subida de archivo exitosa', url: file.path };
+  }
 }
