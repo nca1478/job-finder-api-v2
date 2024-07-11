@@ -92,7 +92,7 @@ export class UsersController {
     return this.usersService.changePassword(changePasswordDto, token);
   }
 
-  @Post(':id/upload-pdf')
+  @Post(':id/upload-file')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(

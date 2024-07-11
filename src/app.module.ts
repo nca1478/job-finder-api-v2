@@ -41,6 +41,9 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(ValidateUserMiddleware)
-      .forRoutes({ path: '/users/:id/upload-pdf', method: RequestMethod.POST });
+      .forRoutes({
+        path: '/users/:id/upload-file',
+        method: RequestMethod.POST,
+      });
   }
 }
