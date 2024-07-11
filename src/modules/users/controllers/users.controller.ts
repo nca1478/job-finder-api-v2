@@ -17,8 +17,6 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import { v2 as cloudinary } from 'cloudinary';
 import { UserEntity } from '../entities/user.entity';
 import {
   ChangePassEmailDto,
@@ -29,12 +27,8 @@ import {
 } from '../dto';
 import { UsersService } from '../services/users.service';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
-import { JwtValidationPipe } from '../../../common/pipes/jwt-validation/jwt-validation.pipe';
 import { CloudinaryService } from '../../../common/modules/cloudinary/services/cloudinary.service';
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-});
+import { FileValidatorPipe, JwtValidationPipe } from '../../../common/pipes';
 
 @Controller('users')
 export class UsersController {
@@ -103,7 +97,7 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @Param('id', ParseUUIDPipe) id: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile('file', FileValidatorPipe) file: Express.Multer.File,
   ) {
     return await this.cloudinaryService.uploadFile(file);
   }
