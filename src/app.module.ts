@@ -8,14 +8,17 @@ import { EnvConfigModule } from './common/env-config/env-config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { EmailsModule } from './modules/emails/emails.module';
 import { UsersModule } from './modules/users/users.module';
-import { FilesModule } from './modules/files/files.module';
-import { ValidateUserMiddleware } from './common/middlewares';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CloudinaryModule } from './common/modules/cloudinary/cloudinary.module';
+
 import { UserEntity } from './modules/users/entities/user.entity';
+import { ValidateUserMiddleware } from './common/middlewares';
 
 @Module({
   imports: [
     AuthModule,
+
+    CloudinaryModule,
 
     DatabaseModule,
 
@@ -24,8 +27,6 @@ import { UserEntity } from './modules/users/entities/user.entity';
     EnvConfigModule.forRoot({
       isGlobal: true,
     }),
-
-    FilesModule,
 
     UsersModule,
 

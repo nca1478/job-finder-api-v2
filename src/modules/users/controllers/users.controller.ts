@@ -30,7 +30,7 @@ import {
 import { UsersService } from '../services/users.service';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
 import { JwtValidationPipe } from '../../../common/pipes/jwt-validation/jwt-validation.pipe';
-import { FilesService } from '../../../modules/files/services/files.service';
+import { CloudinaryService } from '../../../common/modules/cloudinary/services/cloudinary.service';
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -40,7 +40,7 @@ const storage = new CloudinaryStorage({
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly filesService: FilesService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   @Post()
@@ -100,11 +100,11 @@ export class UsersController {
 
   @Post(':id/upload-pdf')
   @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(FileInterceptor('file', { storage }))
+  @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @Param('id', ParseUUIDPipe) id: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.filesService.getFileUploaded(file);
+    return await this.cloudinaryService.uploadFile(file);
   }
 }
