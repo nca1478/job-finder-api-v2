@@ -9,13 +9,14 @@ import {
 } from '@nestjs/common';
 import { SkillsService } from '../services/skills.service';
 import { CreateSkillDto, UpdateSkillDto } from '../dto';
+import { SkillEntity } from '../entities/skill.entity';
 
 @Controller('skills')
 export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
 
   @Post()
-  create(@Body() createSkillDto: CreateSkillDto) {
+  create(@Body() createSkillDto: CreateSkillDto): Promise<SkillEntity> {
     return this.skillsService.create(createSkillDto);
   }
 

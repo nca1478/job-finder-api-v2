@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '../../modules/users/entities/user.entity';
 import { EnvConfigModule, EnvConfigService } from '../env-config';
+
+import { UserEntity } from '../../modules/users/entities/user.entity';
+import { SkillEntity } from '../../modules/skills/entities/skill.entity';
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { EnvConfigModule, EnvConfigService } from '../env-config';
           username: configService.getDbUsername(),
           password: configService.getDbPassword(),
           database: configService.getDbName(),
-          entities: [UserEntity],
+          entities: [UserEntity, SkillEntity],
           synchronize: false,
         };
       },

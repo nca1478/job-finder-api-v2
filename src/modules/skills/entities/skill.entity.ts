@@ -3,8 +3,8 @@ import { BeforeInsert, Column, Entity } from 'typeorm';
 import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
 import { SkillModel } from '../models/skill.model';
 
-@Entity('users')
-export class Skill extends ColumnCommonEntity implements SkillModel {
+@Entity('skills')
+export class SkillEntity extends ColumnCommonEntity implements SkillModel {
   @Column('varchar')
   name: string;
 

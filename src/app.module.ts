@@ -12,6 +12,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudinaryModule } from './common/modules/cloudinary/cloudinary.module';
 
 import { UserEntity } from './modules/users/entities/user.entity';
+import { SkillEntity } from './modules/skills/entities/skill.entity';
+
 import { ValidateUserMiddleware } from './common/middlewares';
 import { SkillsModule } from './modules/skills/skills.module';
 
@@ -37,7 +39,7 @@ import { SkillsModule } from './modules/skills/skills.module';
 
     SkillsModule,
 
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, SkillEntity]),
   ],
 })
 export class AppModule {
