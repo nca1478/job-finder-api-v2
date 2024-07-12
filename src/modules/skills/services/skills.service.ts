@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateSkillDto, UpdateSkillDto } from '../dto';
 import { SkillEntity } from '../entities/skill.entity';
 import { Repository } from 'typeorm';
+import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 
 @Injectable()
 export class SkillsService {
@@ -17,12 +18,32 @@ export class SkillsService {
     return await this.skillsRepository.save(newSkill);
   }
 
-  findAll() {
-    return `This action returns all skills`;
+  async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<SkillEntity>> {
+    const queryBuilder = this.skillsRepository.createQueryBuilder('s');
+
+    queryBuilder
+      .orderBy('s.createdAt', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} skill`;
+  async findOne(id: string): Promise<SkillEntity> {
+    const skill = await this.skillsRepository.findOne({
+      where: { id },
+    });
+
+    if (!skill) {
+      throw new NotFoundException(`Habilidad con ID ${id} no fué encontrada`);
+    }
+
+    return skill;
   }
 
   update(id: number, updateSkillDto: UpdateSkillDto) {
