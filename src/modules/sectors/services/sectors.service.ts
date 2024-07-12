@@ -42,17 +42,37 @@ export class SectorsService {
     });
 
     if (!sector) {
-      throw new NotFoundException(`Habilidad con ID ${id} no fué encontrada`);
+      throw new NotFoundException(`Sector con ID ${id} no fué encontrado`);
     }
 
     return sector;
   }
 
-  update(id: number, updateSectorDto: UpdateSectorDto) {
-    return `This action updates a #${id} sector`;
+  async update(
+    id: string,
+    updateSectorDto: UpdateSectorDto,
+  ): Promise<SectorEntity> {
+    const sector = await this.sectorsRepository.preload({
+      ...updateSectorDto,
+      id,
+    });
+
+    if (!sector) {
+      throw new NotFoundException(`Sector con ID ${id} no fué encontrado`);
+    }
+
+    return await this.sectorsRepository.save(sector);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} sector`;
+  async remove(id: string): Promise<SectorEntity> {
+    const sector = await this.sectorsRepository.findOne({
+      where: { id },
+    });
+
+    if (!sector) {
+      throw new NotFoundException(`Sector con ID ${id} no fué encontrado`);
+    }
+
+    return this.sectorsRepository.remove(sector);
   }
 }

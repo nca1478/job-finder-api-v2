@@ -39,12 +39,17 @@ export class SectorsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSectorDto: UpdateSectorDto) {
-    return this.sectorsService.update(+id, updateSectorDto);
+  @UseGuards(AuthGuard('jwt'))
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateSectorDto: UpdateSectorDto,
+  ): Promise<SectorEntity> {
+    return this.sectorsService.update(id, updateSectorDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sectorsService.remove(+id);
+  @UseGuards(AuthGuard('jwt'))
+  remove(@Param('id', ParseUUIDPipe) id: string): Promise<SectorEntity> {
+    return this.sectorsService.remove(id);
   }
 }
