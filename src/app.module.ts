@@ -13,6 +13,7 @@ import { CloudinaryModule } from './common/modules/cloudinary/cloudinary.module'
 
 import { UserEntity } from './modules/users/entities/user.entity';
 import { SkillEntity } from './modules/skills/entities/skill.entity';
+import { SectorEntity } from './modules/sectors/entities/sector.entity';
 
 import { ValidateUserMiddleware } from './common/middlewares';
 import { SkillsModule } from './modules/skills/skills.module';
@@ -42,7 +43,7 @@ import { SectorsModule } from './modules/sectors/sectors.module';
 
     SkillsModule,
 
-    TypeOrmModule.forFeature([UserEntity, SkillEntity]),
+    TypeOrmModule.forFeature([UserEntity, SkillEntity, SectorEntity]),
   ],
 })
 export class AppModule {

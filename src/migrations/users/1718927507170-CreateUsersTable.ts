@@ -4,12 +4,14 @@ import { basicPropertiesMigration } from '../../common/database/basic-properties
 import { UUID_EXTENSION } from '../../common/constants';
 
 export class CreateUsersTable1718927507170 implements MigrationInterface {
+  private tableName = 'users';
+
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(UUID_EXTENSION);
 
     await queryRunner.createTable(
       new Table({
-        name: 'users',
+        name: this.tableName,
         columns: [
           ...basicPropertiesMigration,
           {
@@ -101,6 +103,6 @@ export class CreateUsersTable1718927507170 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('users');
+    await queryRunner.dropTable(this.tableName);
   }
 }

@@ -10,11 +10,11 @@ import {
   ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { SkillsService } from '../services/skills.service';
 import { CreateSkillDto, UpdateSkillDto } from '../dto';
 import { SkillEntity } from '../entities/skill.entity';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('skills')
 export class SkillsController {

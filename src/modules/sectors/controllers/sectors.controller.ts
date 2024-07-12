@@ -6,16 +6,20 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { SectorsService } from '../services/sectors.service';
 import { CreateSectorDto, UpdateSectorDto } from '../dto';
+import { SectorEntity } from '../entities/sector.entity';
 
 @Controller('sectors')
 export class SectorsController {
   constructor(private readonly sectorsService: SectorsService) {}
 
   @Post()
-  create(@Body() createSectorDto: CreateSectorDto) {
+  @UseGuards(AuthGuard('jwt'))
+  create(@Body() createSectorDto: CreateSectorDto): Promise<SectorEntity> {
     return this.sectorsService.create(createSectorDto);
   }
 

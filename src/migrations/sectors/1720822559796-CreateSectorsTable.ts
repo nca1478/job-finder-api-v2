@@ -2,8 +2,8 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 import { basicPropertiesMigration } from '../../common/database/basic-properties.migration';
 import { UUID_EXTENSION } from '../../common/constants';
 
-export class CreateSkillsTable1720747437606 implements MigrationInterface {
-  private tableName = 'skills';
+export class CreateSectorsTable1720822559796 implements MigrationInterface {
+  private tableName = 'sectors';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(UUID_EXTENSION);

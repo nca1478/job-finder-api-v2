@@ -4,6 +4,7 @@ import { EnvConfigModule, EnvConfigService } from '../env-config';
 
 import { UserEntity } from '../../modules/users/entities/user.entity';
 import { SkillEntity } from '../../modules/skills/entities/skill.entity';
+import { SectorEntity } from '../../modules/sectors/entities/sector.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { SkillEntity } from '../../modules/skills/entities/skill.entity';
           username: configService.getDbUsername(),
           password: configService.getDbPassword(),
           database: configService.getDbName(),
-          entities: [UserEntity, SkillEntity],
+          entities: [UserEntity, SkillEntity, SectorEntity],
           synchronize: false,
         };
       },
