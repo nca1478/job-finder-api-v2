@@ -18,10 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "migration:create": "npx typeorm migration:create path/entity/CreateEntityTable",
-    "migration:run": "npm run build && npx typeorm migration:run -d dist/common/database/orm-config.js",
-    "migration:revert": "npm run build && npx typeorm migration:revert -d dist/common/database/orm-config.js"
+    "typeorm": "npx typeorm-ts-node-commonjs -d src/common/database/migration.config.ts",
+    "migration:create": "npx typeorm migration:create src/migrations/entity-name/CreateEntitynameTable",
+    "migration:run": "npm run build && npx typeorm migration:run -d dist/common/database/migration.config.js",
+    "migration:revert": "npm run build && npx typeorm migration:revert -d dist/common/database/migration.config.js"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "^0.6.96",

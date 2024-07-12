@@ -1,10 +1,11 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 import { roleEnum } from '../../modules/users/models/user.model';
 import { basicPropertiesMigration } from '../../common/database/basic-properties.migration';
+import { UUID_EXTENSION } from '../../common/constants';
 
 export class CreateUsersTable1718927507170 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+    await queryRunner.query(UUID_EXTENSION);
 
     await queryRunner.createTable(
       new Table({
