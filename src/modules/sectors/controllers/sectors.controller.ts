@@ -7,11 +7,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { SectorsService } from '../services/sectors.service';
 import { CreateSectorDto, UpdateSectorDto } from '../dto';
 import { SectorEntity } from '../entities/sector.entity';
+import { PageDto, PageOptionsDto } from '../../../common/dtos';
 
 @Controller('sectors')
 export class SectorsController {
@@ -24,13 +27,15 @@ export class SectorsController {
   }
 
   @Get()
-  findAll() {
-    return this.sectorsService.findAll();
+  findAll(
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<SectorEntity>> {
+    return this.sectorsService.findAll(pageOptionsDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sectorsService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<SectorEntity> {
+    return this.sectorsService.findOne(id);
   }
 
   @Patch(':id')
