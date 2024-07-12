@@ -16,6 +16,7 @@ import { SkillEntity } from './modules/skills/entities/skill.entity';
 
 import { ValidateUserMiddleware } from './common/middlewares';
 import { SkillsModule } from './modules/skills/skills.module';
+import { SectorsModule } from './modules/sectors/sectors.module';
 
 @Module({
   imports: [
@@ -36,6 +37,8 @@ import { SkillsModule } from './modules/skills/skills.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
     }),
+
+    SectorsModule,
 
     SkillsModule,
 
