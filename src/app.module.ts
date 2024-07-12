@@ -13,6 +13,7 @@ import { CloudinaryModule } from './common/modules/cloudinary/cloudinary.module'
 
 import { UserEntity } from './modules/users/entities/user.entity';
 import { ValidateUserMiddleware } from './common/middlewares';
+import { SkillsModule } from './modules/skills/skills.module';
 
 @Module({
   imports: [
@@ -34,16 +35,16 @@ import { ValidateUserMiddleware } from './common/middlewares';
       rootPath: join(__dirname, '..', '..', 'public'),
     }),
 
+    SkillsModule,
+
     TypeOrmModule.forFeature([UserEntity]),
   ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(ValidateUserMiddleware)
-      .forRoutes({
-        path: '/users/:id/upload-file',
-        method: RequestMethod.POST,
-      });
+    consumer.apply(ValidateUserMiddleware).forRoutes({
+      path: '/users/:id/upload-file',
+      method: RequestMethod.POST,
+    });
   }
 }
