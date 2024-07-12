@@ -20,7 +20,7 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       success: false,
       statusCode: status,
-      path: httpAdapter.getRequestUrl(ctx.getRequest()),
+      // path: httpAdapter.getRequestUrl(ctx.getRequest()),
       data: null,
       meta: null,
       errors: { msg: exception.message },

@@ -46,11 +46,31 @@ export class SkillsService {
     return skill;
   }
 
-  update(id: number, updateSkillDto: UpdateSkillDto) {
-    return `This action updates a #${id} skill`;
+  async update(
+    id: string,
+    updateSkillDto: UpdateSkillDto,
+  ): Promise<SkillEntity> {
+    const skill = await this.skillsRepository.preload({
+      ...updateSkillDto,
+      id,
+    });
+
+    if (!skill) {
+      throw new NotFoundException(`Habilidad con ID ${id} no fué encontrada`);
+    }
+
+    return await this.skillsRepository.save(skill);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} skill`;
+  async remove(id: string): Promise<SkillEntity> {
+    const skill = await this.skillsRepository.findOne({
+      where: { id },
+    });
+
+    if (!skill) {
+      throw new NotFoundException(`Habilidad con ID ${id} no fué encontrada`);
+    }
+
+    return this.skillsRepository.remove(skill);
   }
 }

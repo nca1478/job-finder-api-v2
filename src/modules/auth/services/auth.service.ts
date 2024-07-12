@@ -74,7 +74,7 @@ export class AuthService {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-      throw new BadRequestException('Token no válido');
+      throw new UnauthorizedException('Token requerido o no válido');
     }
 
     const [, token] = authHeader.split(' ');
