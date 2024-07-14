@@ -18,10 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "npx typeorm-ts-node-commonjs -d src/common/database/migration.config.ts",
+    "typeorm": "npx typeorm-ts-node-commonjs -d src/common/database/config/migration.config.ts",
     "migration:create": "npx typeorm migration:create src/migrations/entity-name/CreateEntitynameTable",
-    "migration:run": "npm run build && npx typeorm migration:run -d dist/common/database/migration.config.js",
-    "migration:revert": "npm run build && npx typeorm migration:revert -d dist/common/database/migration.config.js"
+    "migration:run": "npm run build && npx typeorm migration:run -d dist/common/database/config/migration.config.js",
+    "migration:revert": "npm run build && npx typeorm migration:revert -d dist/common/database/config/migration.config.js",
+    "seed": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/common/database/config/seeds.config.ts"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "^0.6.96",
@@ -50,7 +51,8 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "streamifier": "^0.1.1",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "typeorm-extension": "^3.5.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
