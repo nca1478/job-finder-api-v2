@@ -2,6 +2,7 @@ import 'dotenv/config';
 import * as process from 'process';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
+// Para migraciones: "npm run migration:run"
 const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,

@@ -5,6 +5,7 @@ import { SeederOptions } from 'typeorm-extension';
 import { DataSourceOptions } from 'typeorm/data-source';
 import InitSeeder from '../seeds/init.seeder';
 
+// Para migraciones: "npm run mig:gen"
 const options = {
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
@@ -13,7 +14,7 @@ const options = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   entities: [__dirname + '/../../../modules/**/entities/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+  migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
   seeds: [InitSeeder],
 };
 
