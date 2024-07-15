@@ -18,10 +18,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "npx typeorm-ts-node-commonjs -d src/common/database/config/migration.config.ts",
     "migration:create": "npx typeorm migration:create src/migrations/entity-name/CreateEntitynameTable",
-    "migration:run": "npm run build && npx typeorm migration:run -d dist/common/database/config/migration.config.js",
-    "migration:revert": "npm run build && npx typeorm migration:revert -d dist/common/database/config/migration.config.js",
+    "migration:run": "npm run build && npx typeorm migration:run -d dist/common/database/config/orm.config.js",
+    "migration:revert": "npm run build && npx typeorm migration:revert -d dist/common/database/config/orm.config.js",
+    "typeorm": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js -d src/common/database/config/migration.config.ts",
+    "mig:gen": "npm run typeorm migration:generate -- ",
+    "mig:run": "npm run typeorm migration:run",
+    "mig:rev": "npm run typeorm migration:revert",
     "seed": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/common/database/config/seeds.config.ts"
   },
   "dependencies": {
