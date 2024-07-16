@@ -15,7 +15,7 @@ export class OffersService {
     private readonly offersRepository: Repository<OfferEntity>,
   ) {}
 
-  async create(createOfferDto: CreateOfferDto, user: UserEntity) {
+  async create(createOfferDto: CreateOfferDto, user: UserEntity): Promise<any> {
     const newOffer = this.offersRepository.create(createOfferDto);
 
     await this.offersRepository.save({ ...newOffer, user });
@@ -23,26 +23,40 @@ export class OffersService {
     return { ...newOffer, userId: user.id };
   }
 
-  async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<OfferEntity>> {
+  async findAll(
+    pageOptionsDto: PageOptionsDto,
+    user: UserEntity,
+  ): Promise<PageDto<OfferEntity>> {
     const queryBuilder = this.offersRepository.createQueryBuilder('o');
 
     queryBuilder
+      .innerJoinAndSelect('o.user', 'user')
+      .where('user.id = :id', { id: user.id })
       .orderBy('o.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
-
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 
-    return new PageDto(entities, pageMetaDto);
+    const responseEntities: any = entities.map((entity) => {
+      delete entity.user;
+
+      return {
+        ...entity,
+        userId: user.id,
+      };
+    });
+
+    return new PageDto(responseEntities, pageMetaDto);
   }
 
-  async findOne(id: string): Promise<OfferEntity> {
+  async findOne(id: string): Promise<any> {
     const offer = await this.offersRepository.findOne({
       where: { id },
     });
+    const userId = offer.user.id;
 
     if (!offer) {
       throw new NotFoundException(
@@ -50,7 +64,9 @@ export class OffersService {
       );
     }
 
-    return offer;
+    delete offer.user;
+
+    return { ...offer, userId };
   }
 
   update(id: string, updateOfferDto: UpdateOfferDto) {

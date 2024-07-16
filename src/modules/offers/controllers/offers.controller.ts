@@ -32,13 +32,14 @@ export class OffersController {
   @UseGuards(AuthGuard('jwt'))
   findAll(
     @Query() pageOptionsDto: PageOptionsDto,
+    @GetUser() user: UserEntity,
   ): Promise<PageDto<OfferEntity>> {
-    return this.offersService.findAll(pageOptionsDto);
+    return this.offersService.findAll(pageOptionsDto, user);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<OfferEntity> {
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<any> {
     return this.offersService.findOne(id);
   }
 
