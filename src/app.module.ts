@@ -18,6 +18,7 @@ import { SectorEntity } from './modules/sectors/entities/sector.entity';
 import { ValidateUserMiddleware } from './common/middlewares';
 import { SkillsModule } from './modules/skills/skills.module';
 import { SectorsModule } from './modules/sectors/sectors.module';
+import { OffersModule } from './modules/offers/offers.module';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { SectorsModule } from './modules/sectors/sectors.module';
       isGlobal: true,
     }),
 
-    UsersModule,
+    OffersModule,
 
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
@@ -44,6 +45,8 @@ import { SectorsModule } from './modules/sectors/sectors.module';
     SkillsModule,
 
     TypeOrmModule.forFeature([UserEntity, SkillEntity, SectorEntity]),
+
+    UsersModule,
   ],
 })
 export class AppModule {
