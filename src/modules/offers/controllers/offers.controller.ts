@@ -6,16 +6,20 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { OffersService } from '../services/offers.service';
 import { CreateOfferDto, UpdateOfferDto } from '../dto';
+import { OfferEntity } from '../entities/offer.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('offers')
 export class OffersController {
   constructor(private readonly offersService: OffersService) {}
 
   @Post()
-  create(@Body() createOfferDto: CreateOfferDto) {
+  @UseGuards(AuthGuard('jwt'))
+  create(@Body() createOfferDto: CreateOfferDto): Promise<OfferEntity> {
     return this.offersService.create(createOfferDto);
   }
 
