@@ -19,6 +19,7 @@ import { ValidateUserMiddleware } from './common/middlewares';
 import { SkillsModule } from './modules/skills/skills.module';
 import { SectorsModule } from './modules/sectors/sectors.module';
 import { OffersModule } from './modules/offers/offers.module';
+import { OfferEntity } from './modules/offers/entities/offer.entity';
 
 @Module({
   imports: [
@@ -44,7 +45,12 @@ import { OffersModule } from './modules/offers/offers.module';
 
     SkillsModule,
 
-    TypeOrmModule.forFeature([UserEntity, SkillEntity, SectorEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      SkillEntity,
+      SectorEntity,
+      OfferEntity,
+    ]),
 
     UsersModule,
   ],
