@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { HttpAdapterHost } from '@nestjs/core';
 import {
   ExceptionFilter,
   Catch,
@@ -9,13 +8,13 @@ import {
 
 @Catch(UnauthorizedException)
 export class UnauthorizedExceptionFilter implements ExceptionFilter {
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+  // constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: UnauthorizedException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
-    const { httpAdapter } = this.httpAdapterHost;
+    // const { httpAdapter } = this.httpAdapterHost;
 
     response.status(status).json({
       success: false,
