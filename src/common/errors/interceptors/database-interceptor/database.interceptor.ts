@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';
 import { catchError, Observable } from 'rxjs';
-import { dbErrorCodes } from '../enums/db-error-codes.enum';
+import { dbErrorCodes } from '../../enums/db-error-codes.enum';
 
 @Injectable()
 export class DatabaseInterceptor implements NestInterceptor {
