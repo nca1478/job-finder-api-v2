@@ -2,10 +2,13 @@ import { hash } from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { DataSource } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
-import { UserEntity } from '../../../modules/users/entities/user.entity';
-import { roleEnum, UserModel } from '../../../modules/users/models/user.model';
+import { UserEntity } from '../../../../modules/users/entities/user.entity';
+import {
+  roleEnum,
+  UserModel,
+} from '../../../../modules/users/models/user.model';
 
-export default class UserSeeder implements Seeder {
+export class UserSeeder implements Seeder {
   public async run(
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,

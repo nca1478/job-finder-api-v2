@@ -1,9 +1,9 @@
 import { hash } from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { setSeederFactory } from 'typeorm-extension';
-import { UserEntity } from '../../../modules/users/entities/user.entity';
-import { roleEnum } from '../../../modules/users/models/user.model';
-import { getRandomInt } from '../../../common/utils';
+import { UserEntity } from '../../../../modules/users/entities/user.entity';
+import { roleEnum } from '../../../../modules/users/models/user.model';
+import { getRandomInt } from '../../../utils';
 
 export default setSeederFactory(UserEntity, async (faker) => {
   const user = new UserEntity();
