@@ -1,8 +1,9 @@
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'node:crypto';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { UserModel, roleEnum } from '../models/user.model';
 import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
+import { OfferEntity as Offer } from '../../../modules/offers/entities/offer.entity';
 
 @Entity('users')
 export class UserEntity extends ColumnCommonEntity implements UserModel {
@@ -84,4 +85,8 @@ export class UserEntity extends ColumnCommonEntity implements UserModel {
   checkFields() {
     if (this.email) this.email = this.email.toLowerCase().trim();
   }
+
+  // Relaciones
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offer: Offer[];
 }

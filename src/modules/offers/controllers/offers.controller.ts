@@ -15,6 +15,8 @@ import { OffersService } from '../services/offers.service';
 import { CreateOfferDto, UpdateOfferDto } from '../dto';
 import { OfferEntity } from '../entities/offer.entity';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
+import { GetUser } from '../../../common/decorators';
+import { UserEntity } from '../../../modules/users/entities/user.entity';
 
 @Controller('offers')
 export class OffersController {
@@ -22,8 +24,8 @@ export class OffersController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  create(@Body() createOfferDto: CreateOfferDto): Promise<OfferEntity> {
-    return this.offersService.create(createOfferDto);
+  create(@Body() createOfferDto: CreateOfferDto, @GetUser() user: UserEntity) {
+    return this.offersService.create(createOfferDto, user);
   }
 
   @Get()

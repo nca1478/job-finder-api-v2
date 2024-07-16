@@ -1,9 +1,12 @@
 import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { CreateOfferDto, UpdateOfferDto } from '../dto';
-import { OfferEntity } from '../entities/offer.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
+
+import { OfferEntity } from '../entities/offer.entity';
+import { UserEntity } from '../../../modules/users/entities/user.entity';
 
 @Injectable()
 export class OffersService {
@@ -12,10 +15,12 @@ export class OffersService {
     private readonly offersRepository: Repository<OfferEntity>,
   ) {}
 
-  async create(createOfferDto: CreateOfferDto): Promise<OfferEntity> {
+  async create(createOfferDto: CreateOfferDto, user: UserEntity) {
     const newOffer = this.offersRepository.create(createOfferDto);
 
-    return await this.offersRepository.save(newOffer);
+    await this.offersRepository.save({ ...newOffer, user });
+
+    return { ...newOffer, userId: user.id };
   }
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<OfferEntity>> {
