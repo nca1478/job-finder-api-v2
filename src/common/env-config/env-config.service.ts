@@ -104,4 +104,8 @@ export class EnvConfigService implements EnvConfig {
   getCloudinaryApiSecret(): string {
     return this.configService.getOrThrow<string>('CLOUDINARY_API_SECRET');
   }
+
+  getDbSynchronize(): boolean {
+    return Boolean(this.configService.getOrThrow<boolean>('DB_SYNCHRONIZE'));
+  }
 }

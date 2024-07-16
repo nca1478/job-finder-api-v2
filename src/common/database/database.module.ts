@@ -2,9 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EnvConfigModule, EnvConfigService } from '../env-config';
 
-import { UserEntity } from '../../modules/users/entities/user.entity';
-import { SkillEntity } from '../../modules/skills/entities/skill.entity';
-import { SectorEntity } from '../../modules/sectors/entities/sector.entity';
+const DB_ENTITIES = __dirname + '/../../modules/**/entities/*.entity{.ts,.js}';
 
 @Module({
   imports: [
@@ -18,8 +16,8 @@ import { SectorEntity } from '../../modules/sectors/entities/sector.entity';
           username: configService.getDbUsername(),
           password: configService.getDbPassword(),
           database: configService.getDbName(),
-          entities: [UserEntity, SkillEntity, SectorEntity],
-          synchronize: false,
+          entities: [DB_ENTITIES],
+          synchronize: configService.getDbSynchronize(),
         };
       },
       inject: [EnvConfigService],
