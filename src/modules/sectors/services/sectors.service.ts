@@ -75,4 +75,8 @@ export class SectorsService {
 
     return this.sectorsRepository.remove(sector);
   }
+
+  async preload(sectors: SectorEntity[]): Promise<SectorEntity[]> {
+    return Promise.all(sectors.map((sector) => this.findOne(sector.id)));
+  }
 }

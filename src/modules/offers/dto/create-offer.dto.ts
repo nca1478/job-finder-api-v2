@@ -1,6 +1,7 @@
 import { ArrayNotEmpty, IsNotEmpty, IsOptional } from 'class-validator';
 import { OfferModel } from '../models/offer.model';
 import { SkillEntity } from '../../../modules/skills/entities/skill.entity';
+import { SectorEntity } from '../../../modules/sectors/entities/sector.entity';
 
 export class CreateOfferDto implements OfferModel {
   @IsNotEmpty({ message: 'El título es requerido' })
@@ -29,4 +30,7 @@ export class CreateOfferDto implements OfferModel {
 
   @ArrayNotEmpty({ message: 'Habilidades son requeridas' })
   skills: SkillEntity[];
+
+  @ArrayNotEmpty({ message: 'Sectores son requeridos' })
+  sectors: SectorEntity[];
 }

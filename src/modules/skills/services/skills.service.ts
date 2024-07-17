@@ -73,4 +73,8 @@ export class SkillsService {
 
     return this.skillsRepository.remove(skill);
   }
+
+  async preload(skills: SkillEntity[]): Promise<SkillEntity[]> {
+    return await Promise.all(skills.map((skill) => this.findOne(skill.id)));
+  }
 }
