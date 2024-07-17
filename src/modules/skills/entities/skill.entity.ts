@@ -1,7 +1,8 @@
 import { randomUUID } from 'crypto';
 import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
-import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
 import { SkillModel } from '../models/skill.model';
+
+import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
 import { OfferSkillsEntity as OfferSkill } from '../../../modules/offers/entities';
 
 @Entity('skills')

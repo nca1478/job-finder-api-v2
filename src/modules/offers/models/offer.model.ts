@@ -1,3 +1,5 @@
+import { UserEntity } from '../../../modules/users/entities/user.entity';
+
 export interface OfferModel {
   id?: string;
   title: string;
@@ -13,4 +15,5 @@ export interface OfferModel {
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
+  user?: UserEntity;
 }

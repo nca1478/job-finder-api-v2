@@ -4,9 +4,13 @@ import { ColumnCommonEntity } from '../../../common/entities/column-common.entit
 
 import { OfferEntity as Offer } from './index';
 import { SkillEntity as Skill } from '../../../modules/skills/entities/skill.entity';
+import { OfferSkillModel } from '../models';
 
 @Entity('offer_skills')
-export class OfferSkillsEntity extends ColumnCommonEntity {
+export class OfferSkillsEntity
+  extends ColumnCommonEntity
+  implements OfferSkillModel
+{
   @BeforeInsert()
   generatedId() {
     if (this.id) {

@@ -1,9 +1,11 @@
 import { randomUUID } from 'crypto';
 import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
 import { OfferModel } from '../models/offer.model';
+
+import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
 import { UserEntity as User } from '../../../modules/users/entities/user.entity';
 import { OfferSkillsEntity as OfferSkill } from './index';
+import { OfferSectorsEntity as OfferSector } from './index';
 
 @Entity('offers')
 export class OfferEntity extends ColumnCommonEntity implements OfferModel {
@@ -53,4 +55,9 @@ export class OfferEntity extends ColumnCommonEntity implements OfferModel {
     lazy: true,
   })
   offerSkill: OfferSkill[];
+
+  @OneToMany(() => OfferSector, (offerSector) => offerSector.offer, {
+    lazy: true,
+  })
+  offerSector: OfferSector[];
 }
