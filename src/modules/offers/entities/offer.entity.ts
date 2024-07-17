@@ -1,8 +1,9 @@
 import { randomUUID } from 'crypto';
-import { BeforeInsert, Column, Entity, ManyToOne } from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
 import { OfferModel } from '../models/offer.model';
 import { UserEntity as User } from '../../../modules/users/entities/user.entity';
+import { OfferSkillsEntity as OfferSkill } from './index';
 
 @Entity('offers')
 export class OfferEntity extends ColumnCommonEntity implements OfferModel {
@@ -47,4 +48,9 @@ export class OfferEntity extends ColumnCommonEntity implements OfferModel {
   // Relaciones
   @ManyToOne(() => User, (user) => user.offer, { eager: true })
   user: User;
+
+  @OneToMany(() => OfferSkill, (offerSkill) => offerSkill.offer, {
+    lazy: true,
+  })
+  offerSkill: OfferSkill[];
 }

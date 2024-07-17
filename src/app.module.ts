@@ -11,15 +11,12 @@ import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudinaryModule } from './common/modules/cloudinary/cloudinary.module';
 
-import { UserEntity } from './modules/users/entities/user.entity';
-import { SkillEntity } from './modules/skills/entities/skill.entity';
-import { SectorEntity } from './modules/sectors/entities/sector.entity';
-
 import { ValidateUserMiddleware } from './common/middlewares';
 import { SkillsModule } from './modules/skills/skills.module';
 import { SectorsModule } from './modules/sectors/sectors.module';
 import { OffersModule } from './modules/offers/offers.module';
-import { OfferEntity } from './modules/offers/entities/offer.entity';
+
+import { UserEntity } from './modules/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -45,12 +42,7 @@ import { OfferEntity } from './modules/offers/entities/offer.entity';
 
     SkillsModule,
 
-    TypeOrmModule.forFeature([
-      UserEntity,
-      SkillEntity,
-      SectorEntity,
-      OfferEntity,
-    ]),
+    TypeOrmModule.forFeature([UserEntity]),
 
     UsersModule,
   ],
