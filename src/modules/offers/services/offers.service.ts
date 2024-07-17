@@ -5,20 +5,31 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateOfferDto, UpdateOfferDto } from '../dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 
-import { OfferEntity } from '../entities/offer.entity';
+import { OfferEntity, OfferSkillsEntity } from '../entities';
 import { UserEntity } from '../../../modules/users/entities/user.entity';
+import { SkillEntity } from '../../../modules/skills/entities/skill.entity';
+
+import { SkillsService } from '../../../modules/skills/services/skills.service';
 
 @Injectable()
 export class OffersService {
   constructor(
     @InjectRepository(OfferEntity)
     private readonly offersRepository: Repository<OfferEntity>,
+    @InjectRepository(OfferSkillsEntity)
+    private readonly offerSkillsRepository: Repository<OfferSkillsEntity>,
+    private readonly skillsService: SkillsService,
   ) {}
 
   async create(createOfferDto: CreateOfferDto, user: UserEntity): Promise<any> {
     const newOffer = this.offersRepository.create(createOfferDto);
+    const skills = await this.preloadSkills(createOfferDto.skills);
 
-    await this.offersRepository.save({ ...newOffer, user });
+    const offer = await this.offersRepository.save({ ...newOffer, user });
+
+    // Agregando skills a la oferta
+    const offerSkills = await this.createOfferSkills(offer, skills);
+    await this.offerSkillsRepository.save(offerSkills);
 
     return { ...newOffer, userId: user.id };
   }
@@ -75,5 +86,20 @@ export class OffersService {
 
   remove(id: string) {
     return `This action removes a #${id} offer`;
+  }
+
+  private async preloadSkills(skills: SkillEntity[]) {
+    return await Promise.all(
+      skills.map(async (skill) => await this.skillsService.findOne(skill.id)),
+    );
+  }
+
+  private async createOfferSkills(
+    offer: OfferEntity,
+    skills: SkillEntity[],
+  ): Promise<OfferSkillsEntity[]> {
+    return skills.map((skill) =>
+      this.offerSkillsRepository.create({ offer, skill }),
+    );
   }
 }

@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { ArrayNotEmpty, IsNotEmpty, IsOptional } from 'class-validator';
 import { OfferModel } from '../models/offer.model';
+import { SkillEntity } from '../../../modules/skills/entities/skill.entity';
 
 export class CreateOfferDto implements OfferModel {
   @IsNotEmpty({ message: 'El título es requerido' })
@@ -25,4 +26,7 @@ export class CreateOfferDto implements OfferModel {
 
   @IsOptional()
   img?: string;
+
+  @ArrayNotEmpty({ message: 'Habilidades son requeridas' })
+  skills: SkillEntity[];
 }
