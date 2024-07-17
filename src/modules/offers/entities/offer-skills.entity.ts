@@ -20,9 +20,9 @@ export class OfferSkillsEntity
   }
 
   // Relaciones
-  @ManyToOne(() => Offer, (offer) => offer.offerSkill, { lazy: true })
+  @ManyToOne(() => Offer, (offer) => offer.offerSkill)
   offer: Offer;
 
-  @ManyToOne(() => Skill, (skill) => skill.offerSkill, { lazy: true })
+  @ManyToOne(() => Skill, (skill) => skill.offerSkill)
   skill: Skill;
 }

@@ -51,13 +51,9 @@ export class OfferEntity extends ColumnCommonEntity implements OfferModel {
   @ManyToOne(() => User, (user) => user.offer, { eager: true })
   user: User;
 
-  @OneToMany(() => OfferSkill, (offerSkill) => offerSkill.offer, {
-    lazy: true,
-  })
+  @OneToMany(() => OfferSkill, (offerSkill) => offerSkill.offer)
   offerSkill: OfferSkill[];
 
-  @OneToMany(() => OfferSector, (offerSector) => offerSector.offer, {
-    lazy: true,
-  })
+  @OneToMany(() => OfferSector, (offerSector) => offerSector.offer)
   offerSector: OfferSector[];
 }

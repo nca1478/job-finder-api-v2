@@ -57,6 +57,10 @@ export class OffersService {
 
     queryBuilder
       .innerJoinAndSelect('o.user', 'user')
+      .innerJoinAndSelect('o.offerSkill', 'osk')
+      .innerJoinAndSelect('osk.skill', 'skill')
+      .innerJoinAndSelect('o.offerSector', 'ose')
+      .innerJoinAndSelect('ose.sector', 'sector')
       .where('user.id = :id', { id: user.id })
       .orderBy('o.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
@@ -67,11 +71,23 @@ export class OffersService {
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 
     const responseEntities: any = entities.map((entity) => {
+      const skills = entity.offerSkill.map(({ skill }) => {
+        return skill;
+      });
+
+      const sectors = entity.offerSector.map(({ sector }) => {
+        return sector;
+      });
+
+      delete entity.offerSector;
+      delete entity.offerSkill;
       delete entity.user;
 
       return {
         ...entity,
         userId: user.id,
+        skills,
+        sectors,
       };
     });
 

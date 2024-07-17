@@ -20,9 +20,9 @@ export class OfferSectorsEntity
   }
 
   // Relaciones
-  @ManyToOne(() => Offer, (offer) => offer.offerSector, { lazy: true })
+  @ManyToOne(() => Offer, (offer) => offer.offerSector)
   offer: Offer;
 
-  @ManyToOne(() => Sector, (sector) => sector.offerSector, { lazy: true })
+  @ManyToOne(() => Sector, (sector) => sector.offerSector)
   sector: Sector;
 }
