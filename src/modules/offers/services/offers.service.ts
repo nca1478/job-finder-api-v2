@@ -144,8 +144,37 @@ export class OffersService {
     return { ...offer, userId, skills, sectors };
   }
 
-  update(id: string, updateOfferDto: UpdateOfferDto) {
-    return `This action updates a #${id} offer`;
+  async update(id: string, updateOfferDto: UpdateOfferDto) {
+    const offer = await this.offersRepository.preload({
+      ...updateOfferDto,
+      id,
+    });
+
+    if (!offer) {
+      throw new NotFoundException(
+        `Oferta de trabajo con ID ${id} no fué encontrada`,
+      );
+    }
+
+    const skills = await this.skillsService.preload(updateOfferDto.skills);
+    const sectors = await this.sectorsService.preload(updateOfferDto.sectors);
+
+    // Actualizar oferta
+    await this.offersRepository.save(offer);
+
+    // Borrar skills/sectors de la oferta
+    await this.offerSkillsRepository.delete({ offer });
+    await this.offerSectorsRepository.delete({ offer });
+
+    // Insertar nuevos skills de la oferta
+    const offerSkills = this.createOfferSkills(offer, skills);
+    await this.offerSkillsRepository.save(offerSkills);
+
+    // Insertar nuevos sectors de la oferta
+    const offerSectors = this.createOfferSectors(offer, sectors);
+    await this.offerSectorsRepository.save(offerSectors);
+
+    return await this.findOne(offer.id);
   }
 
   remove(id: string) {

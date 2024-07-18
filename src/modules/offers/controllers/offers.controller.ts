@@ -60,7 +60,11 @@ export class OffersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto) {
+  @UseGuards(AuthGuard('jwt'))
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateOfferDto: UpdateOfferDto,
+  ) {
     return this.offersService.update(id, updateOfferDto);
   }
 
