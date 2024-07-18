@@ -46,7 +46,9 @@ export class OffersService {
     const offerSectors = this.createOfferSectors(offer, sectors);
     await this.offerSectorsRepository.save(offerSectors);
 
-    return { ...newOffer, userId: user.id };
+    delete offer.user;
+
+    return { ...offer, userId: user.id };
   }
 
   async findAll(
@@ -95,10 +97,29 @@ export class OffersService {
   }
 
   async findOne(id: string): Promise<any> {
-    const offer = await this.offersRepository.findOne({
-      where: { id },
-    });
+    const offer = await this.offersRepository
+      .createQueryBuilder('o')
+      .innerJoinAndSelect('o.user', 'user')
+      .innerJoinAndSelect('o.offerSkill', 'osk')
+      .innerJoinAndSelect('osk.skill', 'skill')
+      .innerJoinAndSelect('o.offerSector', 'ose')
+      .innerJoinAndSelect('ose.sector', 'sector')
+      .where('o.id = :id', { id })
+      .getOne();
+
     const userId = offer.user.id;
+
+    const skills = offer.offerSkill.map(({ skill }) => {
+      return skill;
+    });
+
+    const sectors = offer.offerSector.map(({ sector }) => {
+      return sector;
+    });
+
+    delete offer.offerSector;
+    delete offer.offerSkill;
+    delete offer.user;
 
     if (!offer) {
       throw new NotFoundException(
@@ -106,9 +127,7 @@ export class OffersService {
       );
     }
 
-    delete offer.user;
-
-    return { ...offer, userId };
+    return { ...offer, userId, skills, sectors };
   }
 
   update(id: string, updateOfferDto: UpdateOfferDto) {
