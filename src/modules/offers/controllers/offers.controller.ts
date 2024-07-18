@@ -44,6 +44,13 @@ export class OffersController {
     return this.offersService.findAll(pageOptionsDto, null);
   }
 
+  @Get('/last')
+  findAllLast(
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<OfferEntity>> {
+    return this.offersService.findAll(pageOptionsDto, null);
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id', ParseUUIDPipe) id: string): Promise<any> {
