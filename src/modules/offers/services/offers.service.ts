@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CreateOfferDto, UpdateOfferDto } from '../dto';
+import { CreateOfferDto, BodyOptionsDto, UpdateOfferDto } from '../dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 
 import {
@@ -53,12 +53,12 @@ export class OffersService {
 
   async findAll(
     pageOptionsDto: PageOptionsDto,
-    user: UserEntity,
+    bodyOptionsDto: BodyOptionsDto,
+    user?: UserEntity,
   ): Promise<PageDto<OfferEntity>> {
-    const { status } = pageOptionsDto;
-    const queryBuilder = this.offersRepository.createQueryBuilder('o');
+    const offers = this.offersRepository.createQueryBuilder('o');
 
-    queryBuilder
+    offers
       .innerJoinAndSelect('o.user', 'user')
       .innerJoinAndSelect('o.offerSkill', 'osk')
       .innerJoinAndSelect('osk.skill', 'skill')
@@ -68,18 +68,27 @@ export class OffersService {
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
-    if (user) queryBuilder.where('user.id = :id', { id: user.id });
+    if (user) offers.where('user.id = :id', { id: user?.id });
 
-    if (status)
-      queryBuilder.andWhere('o.published = :published', {
-        published: status,
+    if (bodyOptionsDto && bodyOptionsDto.status)
+      offers.where('o.published = :published', { published: true });
+
+    if (bodyOptionsDto && bodyOptionsDto.title)
+      offers.andWhere('(LOWER(o.title) LIKE LOWER(:title))', {
+        title: `%${bodyOptionsDto.title}%`,
       });
 
-    const itemCount = await queryBuilder.getCount();
-    const { entities } = await queryBuilder.getRawAndEntities();
-    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+    const itemCount = await offers.getCount();
+    const { entities } = await offers.getRawAndEntities();
 
-    const responseEntities: any = entities.map((entity) => {
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+    const responseEntities = this.getEntities(entities, user!);
+
+    return new PageDto(responseEntities, pageMetaDto);
+  }
+
+  private getEntities(entities: any, user?: UserEntity) {
+    return entities.map((entity: OfferEntity) => {
       const skills = entity.offerSkill.map(({ skill }) => {
         return skill;
       });
@@ -99,8 +108,6 @@ export class OffersService {
         sectors,
       };
     });
-
-    return new PageDto(responseEntities, pageMetaDto);
   }
 
   async findOne(id: string): Promise<any> {

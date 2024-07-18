@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { OffersService } from '../services/offers.service';
-import { CreateOfferDto, UpdateOfferDto } from '../dto';
+import { CreateOfferDto, BodyOptionsDto, UpdateOfferDto } from '../dto';
 import { OfferEntity } from '../entities/offer.entity';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
 import { GetUser } from '../../../common/decorators';
@@ -34,21 +34,23 @@ export class OffersController {
     @Query() pageOptionsDto: PageOptionsDto,
     @GetUser() user: UserEntity,
   ): Promise<PageDto<OfferEntity>> {
-    return this.offersService.findAll(pageOptionsDto, user);
+    return this.offersService.findAll(pageOptionsDto, null, user);
   }
 
-  @Get('/published')
+  @Post('/published')
   findAllPublished(
     @Query() pageOptionsDto: PageOptionsDto,
+    @Body() bodyOptionsDto: BodyOptionsDto,
   ): Promise<PageDto<OfferEntity>> {
-    return this.offersService.findAll(pageOptionsDto, null);
+    return this.offersService.findAll(pageOptionsDto, bodyOptionsDto, null);
   }
 
-  @Get('/last')
-  findAllLast(
+  @Post('/search')
+  search(
     @Query() pageOptionsDto: PageOptionsDto,
+    @Body() bodyOptionsDto: BodyOptionsDto,
   ): Promise<PageDto<OfferEntity>> {
-    return this.offersService.findAll(pageOptionsDto, null);
+    return this.offersService.findAll(pageOptionsDto, bodyOptionsDto, null);
   }
 
   @Get(':id')
