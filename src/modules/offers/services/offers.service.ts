@@ -55,6 +55,7 @@ export class OffersService {
     pageOptionsDto: PageOptionsDto,
     user: UserEntity,
   ): Promise<PageDto<OfferEntity>> {
+    const { status } = pageOptionsDto;
     const queryBuilder = this.offersRepository.createQueryBuilder('o');
 
     queryBuilder
@@ -63,10 +64,16 @@ export class OffersService {
       .innerJoinAndSelect('osk.skill', 'skill')
       .innerJoinAndSelect('o.offerSector', 'ose')
       .innerJoinAndSelect('ose.sector', 'sector')
-      .where('user.id = :id', { id: user.id })
       .orderBy('o.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
+
+    if (user) queryBuilder.where('user.id = :id', { id: user.id });
+
+    if (status)
+      queryBuilder.andWhere('o.published = :published', {
+        published: status,
+      });
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
@@ -87,7 +94,7 @@ export class OffersService {
 
       return {
         ...entity,
-        userId: user.id,
+        userId: user?.id,
         skills,
         sectors,
       };

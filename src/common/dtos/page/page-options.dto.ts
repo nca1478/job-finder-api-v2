@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { Order } from '../../../common/constants';
 
@@ -21,6 +21,10 @@ export class PageOptionsDto {
   @Max(50, { message: 'Take no puede ser mayor que 50' })
   @IsOptional()
   readonly take?: number = 10;
+
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsOptional()
+  readonly status?: boolean = false;
 
   get skip(): number {
     return (this.page - 1) * this.take;
