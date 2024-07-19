@@ -129,6 +129,12 @@ export class OffersService {
       .where('o.id = :id', { id })
       .getOne();
 
+    if (!offer) {
+      throw new NotFoundException(
+        `Oferta de trabajo con ID ${id} no fué encontrada`,
+      );
+    }
+
     const userId = offer.user.id;
 
     const skills = offer.offerSkill.map(({ skill }) => {
@@ -142,12 +148,6 @@ export class OffersService {
     delete offer.offerSector;
     delete offer.offerSkill;
     delete offer.user;
-
-    if (!offer) {
-      throw new NotFoundException(
-        `Oferta de trabajo con ID ${id} no fué encontrada`,
-      );
-    }
 
     return { ...offer, userId, skills, sectors };
   }

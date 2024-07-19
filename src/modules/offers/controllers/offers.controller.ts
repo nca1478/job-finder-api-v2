@@ -106,6 +106,8 @@ export class OffersController {
   ) {
     const { img: currentFile } = await this.offersService.findOne(id);
 
-    return await this.cloudinaryService.uploadFile(file, currentFile);
+    if (currentFile) await this.cloudinaryService.removeFile(currentFile);
+
+    return await this.cloudinaryService.uploadFile(file);
   }
 }
