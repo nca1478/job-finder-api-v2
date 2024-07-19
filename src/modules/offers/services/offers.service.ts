@@ -156,23 +156,30 @@ export class OffersService {
       );
     }
 
-    const skills = await this.skillsService.preload(updateOfferDto.skills);
-    const sectors = await this.sectorsService.preload(updateOfferDto.sectors);
+    // Precargar skills/sectors
+    const [skills, sectors] = await Promise.all([
+      this.skillsService.preload(updateOfferDto.skills),
+      this.sectorsService.preload(updateOfferDto.sectors),
+    ]);
 
     // Actualizar oferta
     await this.offersRepository.save(offer);
 
-    // Borrar skills/sectors de la oferta
-    await this.offerSkillsRepository.delete({ offer });
-    await this.offerSectorsRepository.delete({ offer });
+    // Borrar skills/sectors existentes de la oferta
+    await Promise.all([
+      this.offerSkillsRepository.delete({ offer }),
+      this.offerSectorsRepository.delete({ offer }),
+    ]);
 
-    // Insertar nuevos skills de la oferta
+    // Crear nuevos skills/sectors
     const offerSkills = this.createOfferSkills(offer, skills);
-    await this.offerSkillsRepository.save(offerSkills);
-
-    // Insertar nuevos sectors de la oferta
     const offerSectors = this.createOfferSectors(offer, sectors);
-    await this.offerSectorsRepository.save(offerSectors);
+
+    // Insertar nuevos skills/sectors de la oferta
+    await Promise.all([
+      await this.offerSkillsRepository.save(offerSkills),
+      await this.offerSectorsRepository.save(offerSectors),
+    ]);
 
     return await this.findOne(offer.id);
   }
