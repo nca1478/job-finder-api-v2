@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { DatabaseModule } from './common/database/database.module';
@@ -8,15 +8,11 @@ import { EnvConfigModule } from './common/env-config/env-config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { EmailsModule } from './modules/emails/emails.module';
 import { UsersModule } from './modules/users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudinaryModule } from './common/modules/cloudinary/cloudinary.module';
 
-import { ValidateUserMiddleware } from './common/middlewares';
 import { SkillsModule } from './modules/skills/skills.module';
 import { SectorsModule } from './modules/sectors/sectors.module';
 import { OffersModule } from './modules/offers/offers.module';
-
-import { UserEntity } from './modules/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -42,16 +38,7 @@ import { UserEntity } from './modules/users/entities/user.entity';
 
     SkillsModule,
 
-    TypeOrmModule.forFeature([UserEntity]),
-
     UsersModule,
   ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ValidateUserMiddleware).forRoutes({
-      path: '/users/:id/upload-file',
-      method: RequestMethod.POST,
-    });
-  }
-}
+export class AppModule {}

@@ -32,9 +32,10 @@ export class CloudinaryService {
   }
 
   private extractPublicId(currentFile: string): string {
-    const nameArray = currentFile.split('/');
-    const name = nameArray[nameArray.length - 1];
-    const [publicId] = name.split('.');
+    const arrayUrl = currentFile.split('/');
+    const fileName = arrayUrl[arrayUrl.length - 1];
+    const [publicId] = fileName.split('.');
+
     return publicId;
   }
 }

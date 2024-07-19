@@ -25,8 +25,8 @@ import {
   UpdateUserDto,
   VerifyUserDto,
 } from '../dto';
-import { UsersService } from '../services/users.service';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
+import { UsersService } from '../services/users.service';
 import { CloudinaryService } from '../../../common/modules/cloudinary/services/cloudinary.service';
 import { FileValidatorPipe, JwtValidationPipe } from '../../../common/pipes';
 

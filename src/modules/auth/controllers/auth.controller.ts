@@ -6,11 +6,10 @@ import {
   HttpStatus,
   Post,
   Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { AuthService } from '../services/auth.service';
 import { LoginUserDto } from '../dto';
 import { GoogleAuthGuard } from '../guards/google-auth/google-auth.guard';

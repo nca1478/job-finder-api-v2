@@ -3,7 +3,6 @@ import { Request } from 'express';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import {
-  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
