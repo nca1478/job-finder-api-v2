@@ -99,6 +99,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @UploadedFile('file', FileValidatorPipe) file: Express.Multer.File,
   ) {
-    return await this.cloudinaryService.uploadFile(file);
+    const { cvUrl: currentFile } = await this.usersService.findOne(id);
+    return await this.cloudinaryService.uploadFile(file, currentFile);
   }
 }
