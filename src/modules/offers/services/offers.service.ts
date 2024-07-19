@@ -187,8 +187,23 @@ export class OffersService {
     return await this.findOne(offer.id);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} offer`;
+  async remove(id: string) {
+    const offer = await this.offersRepository.findOne({
+      where: { id },
+    });
+
+    if (!offer) {
+      throw new NotFoundException(
+        `Oferta de trabajo con ID ${id} no fué encontrada`,
+      );
+    }
+
+    await Promise.all([
+      this.offerSkillsRepository.delete({ offer }),
+      this.offerSectorsRepository.delete({ offer }),
+    ]);
+
+    return this.offersRepository.remove(offer);
   }
 
   private createOfferSkills(
