@@ -5,7 +5,7 @@ import { CloudinaryResponse } from '../../../../common/interfaces';
 
 @Injectable()
 export class CloudinaryService {
-  uploadFile(
+  public uploadFile(
     file: Express.Multer.File,
     currentFile: string,
   ): Promise<CloudinaryResponse> {
@@ -24,7 +24,7 @@ export class CloudinaryService {
     });
   }
 
-  removeFile(currentFile: string): Promise<any> {
+  public removeFile(currentFile: string): Promise<any> {
     const publicId = this.extractPublicId(currentFile);
 
     return new Promise<{ msg: string }>((resolve, reject) => {

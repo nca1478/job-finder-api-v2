@@ -100,6 +100,7 @@ export class UsersController {
     @UploadedFile('file', FileValidatorPipe) file: Express.Multer.File,
   ) {
     const { cvUrl: currentFile } = await this.usersService.findOne(id);
+
     return await this.cloudinaryService.uploadFile(file, currentFile);
   }
 }

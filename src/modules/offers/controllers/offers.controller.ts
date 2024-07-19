@@ -10,23 +10,33 @@ import {
   Query,
   ParseUUIDPipe,
   Put,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { OffersService } from '../services/offers.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   CreateOfferDto,
   BodyOptionsDto,
   UpdateOfferDto,
   QueryParamsOptionsDto,
 } from '../dto';
-import { OfferEntity } from '../entities/offer.entity';
-import { PageDto, PageOptionsDto } from '../../../common/dtos';
 import { GetUser } from '../../../common/decorators';
+import { PageDto, PageOptionsDto } from '../../../common/dtos';
+import { FileValidatorPipe } from 'src/common/pipes';
+
+import { CloudinaryService } from '../../../common/modules/cloudinary/services/cloudinary.service';
+import { OffersService } from '../services/offers.service';
+
+import { OfferEntity } from '../entities/offer.entity';
 import { UserEntity } from '../../../modules/users/entities/user.entity';
 
 @Controller('offers')
 export class OffersController {
-  constructor(private readonly offersService: OffersService) {}
+  constructor(
+    private readonly cloudinaryService: CloudinaryService,
+    private readonly offersService: OffersService,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -85,5 +95,17 @@ export class OffersController {
     @Query() queryParamOptionsDto: QueryParamsOptionsDto,
   ) {
     return this.offersService.publish(id, queryParamOptionsDto);
+  }
+
+  @Post(':id/upload-file')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UploadedFile('file', FileValidatorPipe) file: Express.Multer.File,
+  ) {
+    const { img: currentFile } = await this.offersService.findOne(id);
+
+    return await this.cloudinaryService.uploadFile(file, currentFile);
   }
 }

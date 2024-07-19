@@ -9,9 +9,11 @@ import { OfferSectorsEntity, OfferSkillsEntity } from './entities';
 
 import { SkillsModule } from '../skills/skills.module';
 import { SectorsModule } from '../sectors/sectors.module';
+import { CloudinaryModule } from '../../common/modules/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
+    CloudinaryModule,
     SectorsModule,
     SkillsModule,
     TypeOrmModule.forFeature([
