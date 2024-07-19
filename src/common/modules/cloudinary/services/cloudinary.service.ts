@@ -5,13 +5,8 @@ import { CloudinaryResponse } from '../../../../common/interfaces';
 
 @Injectable()
 export class CloudinaryService {
-  public uploadFile(
-    file: Express.Multer.File,
-    currentFile: string,
-  ): Promise<CloudinaryResponse> {
+  public uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
     return new Promise<any>((resolve, reject) => {
-      if (currentFile) this.removeFile(currentFile);
-
       const uploadStream = cloudinary.uploader.upload_stream(
         (error, result) => {
           if (error) return reject({ msg: error.message });

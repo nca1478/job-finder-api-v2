@@ -101,6 +101,8 @@ export class UsersController {
   ) {
     const { cvUrl: currentFile } = await this.usersService.findOne(id);
 
-    return await this.cloudinaryService.uploadFile(file, currentFile);
+    if (currentFile) await this.cloudinaryService.removeFile(currentFile);
+
+    return await this.cloudinaryService.uploadFile(file);
   }
 }
