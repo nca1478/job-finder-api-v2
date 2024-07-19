@@ -2,7 +2,12 @@ import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CreateOfferDto, BodyOptionsDto, UpdateOfferDto } from '../dto';
+import {
+  CreateOfferDto,
+  BodyOptionsDto,
+  UpdateOfferDto,
+  QueryParamsOptionsDto,
+} from '../dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 
 import {
@@ -204,6 +209,27 @@ export class OffersService {
     ]);
 
     return this.offersRepository.remove(offer);
+  }
+
+  async publish(id: string, queryParamsOptionsDto: QueryParamsOptionsDto) {
+    const { status } = queryParamsOptionsDto;
+    const offer = await this.offersRepository.findOne({
+      where: { id },
+    });
+
+    console.log(typeof status);
+
+    if (!offer) {
+      throw new NotFoundException(
+        `Oferta de trabajo con ID ${id} no fué encontrada`,
+      );
+    }
+
+    this.offersRepository.update(offer.id, { published: status });
+
+    return {
+      msg: `${status === true ? 'Publicación' : 'Despublicación'} Exitosa.`,
+    };
   }
 
   private createOfferSkills(

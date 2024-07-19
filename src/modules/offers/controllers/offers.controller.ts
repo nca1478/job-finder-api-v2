@@ -9,10 +9,16 @@ import {
   UseGuards,
   Query,
   ParseUUIDPipe,
+  Put,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { OffersService } from '../services/offers.service';
-import { CreateOfferDto, BodyOptionsDto, UpdateOfferDto } from '../dto';
+import {
+  CreateOfferDto,
+  BodyOptionsDto,
+  UpdateOfferDto,
+  QueryParamsOptionsDto,
+} from '../dto';
 import { OfferEntity } from '../entities/offer.entity';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
 import { GetUser } from '../../../common/decorators';
@@ -69,7 +75,15 @@ export class OffersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.offersService.remove(id);
+  }
+
+  @Put(':id/publish')
+  publish(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query() queryParamOptionsDto: QueryParamsOptionsDto,
+  ) {
+    return this.offersService.publish(id, queryParamOptionsDto);
   }
 }
