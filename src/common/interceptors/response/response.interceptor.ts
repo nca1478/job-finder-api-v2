@@ -13,10 +13,27 @@ export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
       map((res: unknown) => this.responseHandler(res, context)),
-      catchError((err: HttpException) =>
-        throwError(() => this.errorHandler(err, context)),
-      ),
+      // catchError((err: HttpException) =>
+      //   throwError(() => this.errorHandler(err, context)),
+      // ),
     );
+  }
+
+  responseHandler(res: any, context: ExecutionContext) {
+    const ctx = context.switchToHttp();
+    const response = ctx.getResponse();
+    const request = ctx.getRequest();
+
+    const statusCode = response.statusCode;
+
+    return {
+      success: true,
+      statusCode,
+      // path: request.url,
+      data: res.data || res,
+      meta: res.meta || null,
+      errors: null,
+    };
   }
 
   errorHandler(exception: HttpException, context: ExecutionContext) {
@@ -38,22 +55,5 @@ export class ResponseInterceptor implements NestInterceptor {
       meta: null,
       errors: { msg: message },
     });
-  }
-
-  responseHandler(res: any, context: ExecutionContext) {
-    const ctx = context.switchToHttp();
-    const response = ctx.getResponse();
-    const request = ctx.getRequest();
-
-    const statusCode = response.statusCode;
-
-    return {
-      success: true,
-      statusCode,
-      // path: request.url,
-      data: res.data || res,
-      meta: res.meta || null,
-      errors: null,
-    };
   }
 }

@@ -4,10 +4,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 
 import { EnvConfigService } from './common/env-config';
 
-import {
-  NotFoundExceptionFilter,
-  UnauthorizedExceptionFilter,
-} from './common/errors/filters';
+import { AllExceptionsFilter } from './common/errors/filters';
 
 import { ResponseInterceptor } from './common/interceptors/response/response.interceptor';
 import { DatabaseInterceptor } from './common/errors/interceptors';
@@ -28,14 +25,11 @@ export function applyGlobalConfig(app: INestApplication) {
     }),
   );
 
-  app.useGlobalFilters(
-    new UnauthorizedExceptionFilter(),
-    new NotFoundExceptionFilter(),
-  );
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   app.useGlobalInterceptors(
     new ResponseInterceptor(),
-    new DatabaseInterceptor(),
+    // new DatabaseInterceptor(),
   );
 
   app.use(
