@@ -12,6 +12,7 @@ export class AddUserIdToOfferTable1721436309328 implements MigrationInterface {
       new TableColumn({
         name: 'userId',
         type: 'uuid',
+        isNullable: true,
       }),
     );
 
@@ -21,6 +22,7 @@ export class AddUserIdToOfferTable1721436309328 implements MigrationInterface {
         columnNames: ['userId'],
         referencedColumnNames: ['id'],
         referencedTableName: 'users',
+        onDelete: 'SET NULL',
       }),
     );
   }

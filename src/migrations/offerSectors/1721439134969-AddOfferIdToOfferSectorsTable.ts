@@ -16,6 +16,7 @@ export class AddOfferIdToOfferSectorsTable1721439134969
       new TableColumn({
         name: 'offerId',
         type: 'uuid',
+        isNullable: true,
       }),
     );
 
@@ -25,6 +26,7 @@ export class AddOfferIdToOfferSectorsTable1721439134969
         columnNames: ['offerId'],
         referencedTableName: 'offers',
         referencedColumnNames: ['id'],
+        onDelete: 'SET NULL',
       }),
     );
   }

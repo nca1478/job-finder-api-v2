@@ -16,6 +16,7 @@ export class AddSkillIdToOfferSkillsTable1721437833701
       new TableColumn({
         name: 'skillId',
         type: 'uuid',
+        isNullable: true,
       }),
     );
 
@@ -25,6 +26,7 @@ export class AddSkillIdToOfferSkillsTable1721437833701
         columnNames: ['skillId'],
         referencedTableName: 'skills',
         referencedColumnNames: ['id'],
+        onDelete: 'SET NULL',
       }),
     );
   }
