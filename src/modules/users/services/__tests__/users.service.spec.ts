@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { UsersService } from '../users.service';
-import { CreateUserDto } from '../../dto';
+import { CreateUserDto, UpdateUserDto } from '../../dto';
 import { roleEnum } from '../../models/user.model';
 import { PageDto, PageMetaDto } from '../../../../common/dtos';
 import { Order } from '../../../../common/constants/index';
@@ -63,6 +63,8 @@ describe('UsersService unit tests', () => {
           .mockResolvedValue({ entities: expectOutputUsers, raw: [] }),
       }),
       findOne: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
+      update: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
+      preload: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
     };
   });
 
@@ -117,6 +119,30 @@ describe('UsersService unit tests', () => {
     const user = await service.findOne(id);
 
     expect(mockUserRepository.findOne).toHaveBeenCalled();
+    expect(expectOutputUsers).toStrictEqual(user);
+  });
+
+  it('should update a user', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = mockUserRepository;
+
+    const updateUserDto: UpdateUserDto = {
+      name: 'Test',
+      email: 'test@gmail.com',
+      profession: 'Test',
+      birthday: new Date('1978-09-14'),
+      education: 'Test',
+      cvUrl: null,
+      linkedinUser: 'test',
+      twitterUser: 'test',
+      instagramUser: 'test',
+      facebookUser: 'test',
+    };
+
+    const user = await service.update(id, updateUserDto);
+
+    expect(mockUserRepository.preload).toHaveBeenCalled();
+    expect(mockUserRepository.save).toHaveBeenCalled();
     expect(expectOutputUsers).toStrictEqual(user);
   });
 });
