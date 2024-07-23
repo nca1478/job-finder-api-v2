@@ -2,6 +2,8 @@ import { randomUUID } from 'crypto';
 import { UsersService } from '../users.service';
 import { CreateUserDto } from '../../dto';
 import { roleEnum } from '../../models/user.model';
+import { PageDto, PageMetaDto } from '../../../../common/dtos';
+import { Order } from '../../../../common/constants/index';
 
 describe('UsersService unit tests', () => {
   let service: UsersService;
@@ -50,6 +52,17 @@ describe('UsersService unit tests', () => {
     mockUserRepository = {
       create: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
       save: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
+      findAll: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
+      createQueryBuilder: jest.fn().mockReturnValue({
+        orderBy: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        take: jest.fn().mockReturnThis(),
+        getCount: jest.fn().mockResolvedValue(expectOutputUsers.length),
+        getRawAndEntities: jest
+          .fn()
+          .mockResolvedValue({ entities: expectOutputUsers, raw: [] }),
+      }),
+      findOne: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
     };
   });
 
@@ -73,5 +86,37 @@ describe('UsersService unit tests', () => {
     expect(mockUserRepository.save).toHaveBeenCalled();
 
     expect(expectOutputUsers).toStrictEqual(newUser);
+  });
+
+  it('should list all users', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = mockUserRepository;
+
+    const itemCount: number = 1;
+    const pageOptionsDto: any = {
+      order: Order.ASC,
+      page: 1,
+      take: 10,
+    };
+
+    const users = await service.findAll(pageOptionsDto);
+
+    expect(mockUserRepository.createQueryBuilder).toHaveBeenCalled();
+
+    expect(users).toBeInstanceOf(PageDto);
+    expect(users.data).toHaveLength(itemCount);
+    expect(users.meta).toBeInstanceOf(PageMetaDto);
+    expect(users.meta.itemCount).toBe(itemCount);
+    expect(expectOutputUsers).toStrictEqual(users.data);
+  });
+
+  it('should gets a user by id', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = mockUserRepository;
+
+    const user = await service.findOne(id);
+
+    expect(mockUserRepository.findOne).toHaveBeenCalled();
+    expect(expectOutputUsers).toStrictEqual(user);
   });
 });

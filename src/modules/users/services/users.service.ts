@@ -54,8 +54,6 @@ export class UsersService {
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 
     return new PageDto(entities, pageMetaDto);
-
-    // return this.usersRepository.find();
   }
 
   async findOne(id: string): Promise<UserEntity> {

@@ -22,14 +22,6 @@ export class PageOptionsDto {
   @IsOptional()
   readonly take?: number = 10;
 
-  @Transform(({ value }) => value === 'true' || value === true)
-  @IsOptional()
-  readonly status?: boolean = false;
-
-  @Type(() => String)
-  @IsOptional()
-  readonly title?: string = null;
-
   get skip(): number {
     return (this.page - 1) * this.take;
   }
