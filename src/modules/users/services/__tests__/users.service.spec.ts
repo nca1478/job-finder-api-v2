@@ -65,6 +65,7 @@ describe('UsersService unit tests', () => {
       findOne: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
       update: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
       preload: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
+      remove: jest.fn().mockReturnValue(Promise.resolve(expectOutputUsers)),
     };
   });
 
@@ -143,6 +144,17 @@ describe('UsersService unit tests', () => {
 
     expect(mockUserRepository.preload).toHaveBeenCalled();
     expect(mockUserRepository.save).toHaveBeenCalled();
+    expect(expectOutputUsers).toStrictEqual(user);
+  });
+
+  it('should remove a user', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = mockUserRepository;
+
+    const user = await service.remove(id);
+
+    expect(mockUserRepository.findOne).toHaveBeenCalled();
+    expect(mockUserRepository.remove).toHaveBeenCalled();
     expect(expectOutputUsers).toStrictEqual(user);
   });
 });
