@@ -25,7 +25,6 @@ import { EmailsService } from '../../../modules/emails/services/emails/emails.se
 export class UsersService {
   @InjectRepository(UserEntity)
   private readonly usersRepository: Repository<UserEntity>;
-
   @Inject(forwardRef(() => AuthService)) private authService: AuthService;
   private readonly emailService: EmailsService;
 
