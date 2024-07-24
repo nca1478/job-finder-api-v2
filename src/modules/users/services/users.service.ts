@@ -23,12 +23,12 @@ import { EmailsService } from '../../../modules/emails/services/emails/emails.se
 
 @Injectable()
 export class UsersService {
-  @InjectRepository(UserEntity)
-  private readonly usersRepository: Repository<UserEntity>;
-  @Inject(forwardRef(() => AuthService)) private authService: AuthService;
-  private readonly emailService: EmailsService;
-
-  constructor() {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
+    @Inject(forwardRef(() => AuthService)) private authService: AuthService,
+    private readonly emailService: EmailsService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const newUser = this.usersRepository.create(createUserDto);

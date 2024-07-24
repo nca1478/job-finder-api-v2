@@ -217,8 +217,6 @@ export class OffersService {
       where: { id },
     });
 
-    console.log(typeof status);
-
     if (!offer) {
       throw new NotFoundException(
         `Oferta de trabajo con ID ${id} no fué encontrada`,
