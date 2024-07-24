@@ -9,6 +9,7 @@ import { NotFoundException } from '@nestjs/common';
 describe('UsersService unit tests', () => {
   let service: UsersService;
   let id: string;
+  let email: string;
   let createdAt: Date;
   let updatedAt: Date;
   let deletedAt: Date;
@@ -19,6 +20,7 @@ describe('UsersService unit tests', () => {
   beforeEach(async () => {
     service = new UsersService();
     id = randomUUID();
+    email = 'test@gmail.com';
     createdAt = new Date();
     updatedAt = new Date();
     birthday = new Date('1978-09-14');
@@ -124,7 +126,7 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
-  it('should throw NotFoundException when user is not found', async () => {
+  it('should throw NotFoundException when user by id is not found', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -132,6 +134,28 @@ describe('UsersService unit tests', () => {
     };
 
     await expect(service.findOne(id)).rejects.toThrow(NotFoundException);
+  });
+
+  it('should gets a user by email', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = mockUserRepository;
+
+    const user = await service.findOneByEmail(email);
+
+    expect(mockUserRepository.findOne).toHaveBeenCalled();
+    expect(expectOutputUsers).toStrictEqual(user);
+  });
+
+  it('should throw NotFoundException when user by email is not found', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = {
+      ...mockUserRepository,
+      findOne: jest.fn().mockReturnValue(Promise.resolve(null)),
+    };
+
+    await expect(service.findOneByEmail(email)).rejects.toThrow(
+      NotFoundException,
+    );
   });
 
   it('should update a user', async () => {
