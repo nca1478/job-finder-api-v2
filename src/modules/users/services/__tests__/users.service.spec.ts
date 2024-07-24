@@ -4,6 +4,7 @@ import { CreateUserDto, UpdateUserDto } from '../../dto';
 import { roleEnum } from '../../models/user.model';
 import { PageDto, PageMetaDto } from '../../../../common/dtos';
 import { Order } from '../../../../common/constants/index';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UsersService unit tests', () => {
   let service: UsersService;
@@ -121,6 +122,16 @@ describe('UsersService unit tests', () => {
 
     expect(mockUserRepository.findOne).toHaveBeenCalled();
     expect(expectOutputUsers).toStrictEqual(user);
+  });
+
+  it('should throw NotFoundException when user is not found', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = {
+      ...mockUserRepository,
+      findOne: jest.fn().mockReturnValue(Promise.resolve(null)),
+    };
+
+    await expect(service.findOne(id)).rejects.toThrow(NotFoundException);
   });
 
   it('should update a user', async () => {
