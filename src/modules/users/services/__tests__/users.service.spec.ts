@@ -10,6 +10,8 @@ describe('UsersService unit tests', () => {
   let service: UsersService;
   let id: string;
   let email: string;
+  let password: string;
+  let token: string;
   let createdAt: Date;
   let updatedAt: Date;
   let deletedAt: Date;
@@ -21,6 +23,8 @@ describe('UsersService unit tests', () => {
     service = new UsersService();
     id = randomUUID();
     email = 'test@gmail.com';
+    password = 'myPassword';
+    token = 'ABC123';
     createdAt = new Date();
     updatedAt = new Date();
     birthday = new Date('1978-09-14');
@@ -31,7 +35,6 @@ describe('UsersService unit tests', () => {
         id,
         name: 'Test',
         email: 'test@gmail.com',
-        password: '123456Pass$$',
         role: roleEnum.user,
         img: null,
         google: false,
@@ -126,7 +129,7 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
-  it('should throw NotFoundException when user by id is not found', async () => {
+  it('should throw NotFoundException when user not found by id', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -146,7 +149,7 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
-  it('should throw NotFoundException when user by email is not found', async () => {
+  it('should throw NotFoundException when user not found by email', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -154,6 +157,63 @@ describe('UsersService unit tests', () => {
     };
 
     await expect(service.findOneByEmail(email)).rejects.toThrow(
+      NotFoundException,
+    );
+  });
+
+  it('should gets a user by email/token', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = mockUserRepository;
+
+    const user = await service.findOneByEmailAndToken(email, token);
+
+    expect(mockUserRepository.findOne).toHaveBeenCalled();
+    expect(expectOutputUsers).toStrictEqual(user);
+  });
+
+  it('should throw NotFoundException when user not found by email/token', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = {
+      ...mockUserRepository,
+      findOne: jest.fn().mockReturnValue(Promise.resolve(null)),
+    };
+
+    await expect(service.findOneByEmailAndToken(email, token)).rejects.toThrow(
+      NotFoundException,
+    );
+  });
+
+  it('should gets a user with password by email', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = {
+      ...mockUserRepository,
+      findOne: jest.fn().mockResolvedValue([
+        {
+          ...expectOutputUsers[0],
+          password,
+        },
+      ]),
+    };
+
+    expectOutputUsers = expectOutputUsers.map((user) => ({
+      ...user,
+      password,
+    }));
+
+    const user = await service.findOneWithPassword(email);
+
+    expect(expectOutputUsers).toEqual(user);
+    expect(user[0].password).toBe('myPassword');
+  });
+
+  it('should throw NotFoundException when user not found with password by email', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = {
+      ...mockUserRepository,
+      findOne: jest.fn().mockReturnValue(Promise.resolve(null)),
+    };
+
+    await expect(service.findOneWithPassword(email)).rejects.toThrow(
       NotFoundException,
     );
   });
@@ -182,6 +242,16 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
+  it('should throw NotFoundException when update user', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = {
+      ...mockUserRepository,
+      preload: jest.fn().mockReturnValue(Promise.resolve(null)),
+    };
+
+    await expect(service.update(id, null)).rejects.toThrow(NotFoundException);
+  });
+
   it('should remove a user', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = mockUserRepository;
@@ -191,5 +261,15 @@ describe('UsersService unit tests', () => {
     expect(mockUserRepository.findOne).toHaveBeenCalled();
     expect(mockUserRepository.remove).toHaveBeenCalled();
     expect(expectOutputUsers).toStrictEqual(user);
+  });
+
+  it('should throw NotFoundException when remove user', async () => {
+    //@ts-expect-error defined part of methods
+    service['usersRepository'] = {
+      ...mockUserRepository,
+      findOne: jest.fn().mockReturnValue(Promise.resolve(null)),
+    };
+
+    await expect(service.remove(id)).rejects.toThrow(NotFoundException);
   });
 });
