@@ -1,10 +1,15 @@
+import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+
 import { UsersService } from '../users.service';
-import { CreateUserDto, UpdateUserDto } from '../../dto';
-import { roleEnum } from '../../models/user.model';
+import { UserEntity } from '../../entities/user.entity';
+
 import { PageDto, PageMetaDto } from '../../../../common/dtos';
+import { CreateUserDto, UpdateUserDto } from '../../dto';
+
 import { Order } from '../../../../common/constants/index';
-import { NotFoundException } from '@nestjs/common';
+import { roleEnum } from '../../models/user.model';
 
 describe('UsersService unit tests', () => {
   let service: UsersService;
@@ -129,7 +134,7 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
-  it('should throw NotFoundException when user not found by id', async () => {
+  it('should not gets a user by id (throw NotFoundException)', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -149,7 +154,7 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
-  it('should throw NotFoundException when user not found by email', async () => {
+  it('should not gets a user by email (throw NotFoundException)', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -171,7 +176,7 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
-  it('should throw NotFoundException when user not found by email/token', async () => {
+  it('should not gets a user by email/token (throw NotFoundException)', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -206,7 +211,7 @@ describe('UsersService unit tests', () => {
     expect(user[0].password).toBe('myPassword');
   });
 
-  it('should throw NotFoundException when user not found with password by email', async () => {
+  it('should not gets a user with password by email (throw NotFoundException)', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -242,7 +247,7 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
-  it('should throw NotFoundException when update user', async () => {
+  it('should not update a user (throw NotFoundException)', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -263,7 +268,7 @@ describe('UsersService unit tests', () => {
     expect(expectOutputUsers).toStrictEqual(user);
   });
 
-  it('should throw NotFoundException when remove user', async () => {
+  it('should not remove a user (throw NotFoundException)', async () => {
     //@ts-expect-error defined part of methods
     service['usersRepository'] = {
       ...mockUserRepository,
@@ -271,5 +276,46 @@ describe('UsersService unit tests', () => {
     };
 
     await expect(service.remove(id)).rejects.toThrow(NotFoundException);
+  });
+
+  it('should verify user (good credentials)', async () => {
+    const verifyUserDto = { email: 'test@gmail.com', password: 'myPassword' };
+    const user = new UserEntity();
+
+    user.email = 'test@gmail.com';
+    user.password = bcrypt.hashSync('myPassword', 10);
+
+    jest.spyOn(service, 'findOneWithPassword').mockResolvedValue(user);
+
+    const result = await service.verify(verifyUserDto);
+
+    expect(result).toEqual({ ...user, password: undefined });
+  });
+
+  it('should not verify user (bad credential)', async () => {
+    const verifyUserDto = { email: 'test@example.com', password: 'wrongPass' };
+    const user = new UserEntity();
+
+    user.email = 'test@example.com';
+    user.password = bcrypt.hashSync('password', 10);
+
+    jest.spyOn(service, 'findOneWithPassword').mockResolvedValue(user);
+
+    await expect(service.verify(verifyUserDto)).rejects.toThrow(
+      UnauthorizedException,
+    );
+  });
+
+  it('should should not verify user (user not found)', async () => {
+    const verifyUserDto = {
+      email: 'test9@example.com',
+      password: 'myPassword',
+    };
+
+    jest.spyOn(service, 'findOneWithPassword').mockResolvedValue(null);
+
+    await expect(service.verify(verifyUserDto)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 });
