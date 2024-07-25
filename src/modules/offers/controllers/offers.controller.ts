@@ -70,7 +70,6 @@ export class OffersController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id', ParseUUIDPipe) id: string): Promise<any> {
     return this.offersService.findOne(id);
   }
