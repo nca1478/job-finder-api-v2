@@ -18,7 +18,7 @@ export class PageOptionsDto {
   @Type(() => Number)
   @IsInt({ message: 'Take debe ser un número entero' })
   @Min(1, { message: 'Take no puede ser menor que 1' })
-  @Max(50, { message: 'Take no puede ser mayor que 50' })
+  @Max(1000, { message: 'Take no puede ser mayor que 50' })
   @IsOptional()
   readonly take?: number = 10;
 
