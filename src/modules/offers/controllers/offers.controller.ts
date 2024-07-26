@@ -84,7 +84,11 @@ export class OffersController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const { img: currentFile } = await this.offersService.findOne(id);
+
+    if (currentFile) await this.cloudinaryService.removeFile(currentFile);
+
     return this.offersService.remove(id);
   }
 
