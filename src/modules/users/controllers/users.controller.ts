@@ -67,7 +67,11 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  remove(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
+    const { cvUrl: currentFile } = await this.usersService.findOne(id);
+
+    if (currentFile) await this.cloudinaryService.removeFile(currentFile);
+
     return this.usersService.remove(id);
   }
 
