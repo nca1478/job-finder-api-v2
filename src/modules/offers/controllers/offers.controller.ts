@@ -12,6 +12,8 @@ import {
   Put,
   UseInterceptors,
   UploadedFile,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -62,6 +64,7 @@ export class OffersController {
   }
 
   @Post('/search')
+  @HttpCode(HttpStatus.OK)
   search(
     @Query() pageOptionsDto: PageOptionsDto,
     @Body() bodyOptionsDto: BodyOptionsDto,
