@@ -20,6 +20,7 @@ import { UserEntity } from '../entities/user.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 import { AuthService } from '../../../modules/auth/services/auth.service';
 import { EmailsService } from '../../../modules/emails/services/emails/emails.service';
+import { createUserPayload } from '../../../common/utils/payloads/create-user.payload';
 
 @Injectable()
 export class UsersService {
@@ -30,14 +31,14 @@ export class UsersService {
     private readonly emailService: EmailsService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const newUser = this.usersRepository.create(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<any> {
+    const body = this.usersRepository.create(createUserDto);
+    const newUser = await this.usersRepository.save(body);
 
-    await this.usersRepository.save(newUser);
+    const payload = createUserPayload(newUser);
+    const token = await this.authService.createJwtToken({ ...payload });
 
-    delete newUser.password;
-
-    return newUser;
+    return { user: newUser, token };
   }
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<UserEntity>> {
