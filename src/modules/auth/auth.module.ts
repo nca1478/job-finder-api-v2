@@ -20,7 +20,7 @@ import { UsersModule } from '../users/users.module';
           secret: configService.getJwtSecret(),
           signOptions: {
             expiresIn: configService.getJwtExpiration(),
-            algorithm: configService.getJwtAlgorithm(),
+            // algorithm: configService.getJwtAlgorithm(),
           },
         };
       },
