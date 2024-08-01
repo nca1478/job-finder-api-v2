@@ -48,6 +48,7 @@ export class AuthService {
       name: payload.displayName,
       email: payload.email,
       password: 'N@_P@@55w0rd',
+      img: payload.photo,
       google: true,
     };
 
