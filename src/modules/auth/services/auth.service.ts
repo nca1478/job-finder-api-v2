@@ -66,6 +66,7 @@ export class AuthService {
       name: payload.firstName + ' ' + payload.lastName,
       email: payload.email,
       password: 'N@_P@@55w0rd',
+      img: payload.photo,
       facebook: true,
     };
 
