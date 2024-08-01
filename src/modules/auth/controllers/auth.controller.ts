@@ -9,12 +9,11 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service';
 import { LoginUserDto } from '../dto';
-import { GoogleAuthGuard } from '../guards/google-auth/google-auth.guard';
 import { EnvConfigService } from '../../../common/env-config';
+import { FacebookAuthGuard, GoogleAuthGuard } from '../guards';
 
 @Controller('auth')
 export class AuthController {
@@ -49,13 +48,13 @@ export class AuthController {
   }
 
   @Get('/facebook')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookAuthGuard)
   async facebookLogin(): Promise<any> {
     return HttpStatus.OK;
   }
 
   @Get('/facebook/redirect')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookAuthGuard)
   async facebookLoginRedirect(
     @Req() req: Request,
     @Res() res: Response,
