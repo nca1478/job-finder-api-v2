@@ -109,7 +109,7 @@ export class EnvConfigService implements EnvConfig {
     return Boolean(this.configService.getOrThrow<boolean>('DB_SYNCHRONIZE'));
   }
 
-  getGoogleRedirectUrlClient(): string {
-    return this.configService.getOrThrow<string>('GOOGLE_REDIRECT_URL_CLIENT');
+  getUrlClientLoginRedirect(): string {
+    return this.configService.getOrThrow<string>('URL_CLIENT_LOGIN_REDIRECT');
   }
 }

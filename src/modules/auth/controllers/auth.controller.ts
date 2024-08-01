@@ -38,7 +38,7 @@ export class AuthController {
   @Get('/google/redirect')
   @UseGuards(GoogleAuthGuard)
   async googleLoginRedirect(@Req() req: Request, @Res() res: Response) {
-    const redirectUrl = await this.authService.loginGoogle(req.user);
+    const redirectUrl = await this.authService.loginSocialMedia(req.user);
     return res.redirect(redirectUrl);
   }
 
@@ -56,8 +56,11 @@ export class AuthController {
 
   @Get('/facebook/redirect')
   @UseGuards(AuthGuard('facebook'))
-  async facebookLoginRedirect(@Req() req: Request): Promise<any> {
-    // return res.redirect('/api/v2');
-    return req.user;
+  async facebookLoginRedirect(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<any> {
+    const redirectUrl = await this.authService.loginSocialMedia(req.user);
+    return res.redirect(redirectUrl);
   }
 }

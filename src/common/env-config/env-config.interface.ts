@@ -24,5 +24,5 @@ export interface EnvConfig {
   getCloudinaryApiKey(): string;
   getCloudinaryApiSecret(): string;
   getDbSynchronize(): boolean;
-  getGoogleRedirectUrlClient(): string;
+  getUrlClientLoginRedirect(): string;
 }

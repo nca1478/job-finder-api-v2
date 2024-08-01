@@ -3,7 +3,6 @@ import { Request } from 'express';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import {
-  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -108,7 +107,7 @@ export class AuthService {
     };
   }
 
-  async loginGoogle(user: any): Promise<string> {
+  async loginSocialMedia(user: any): Promise<string> {
     if (!user) throw new UnauthorizedException(`Acceso no autorizado`);
 
     const payload: JwtPayload = {
@@ -124,6 +123,6 @@ export class AuthService {
 
     const token = await this.createJwtToken(payload);
 
-    return `${this.configService.getGoogleRedirectUrlClient()}?token=${token}`;
+    return `${this.configService.getUrlClientLoginRedirect()}?token=${token}`;
   }
 }

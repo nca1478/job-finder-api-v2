@@ -33,11 +33,11 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
       lastName: name.familyName,
     });
 
-    const payload = {
-      user,
-      accessToken,
-    };
+    // const payload = {
+    //   user,
+    //   accessToken,
+    // };
 
-    done(null, payload);
+    done(null, user);
   }
 }
