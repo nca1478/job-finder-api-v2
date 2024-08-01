@@ -35,10 +35,7 @@ export class UsersService {
     const body = this.usersRepository.create(createUserDto);
     const newUser = await this.usersRepository.save(body);
 
-    const payload = createUserPayload(newUser);
-    const token = await this.authService.createJwtToken({ ...payload });
-
-    return { user: newUser, token };
+    return newUser;
   }
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<UserEntity>> {

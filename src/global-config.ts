@@ -3,11 +3,8 @@ import * as session from 'express-session';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 
 import { EnvConfigService } from './common/env-config';
-
 import { AllExceptionsFilter } from './common/errors/filters';
-
 import { ResponseInterceptor } from './common/interceptors/response/response.interceptor';
-import { DatabaseInterceptor } from './common/errors/interceptors';
 
 export function applyGlobalConfig(app: INestApplication) {
   // const adapterHost = app.get(HttpAdapterHost);

@@ -29,17 +29,24 @@ import { PageDto, PageOptionsDto } from '../../../common/dtos';
 import { UsersService } from '../services/users.service';
 import { CloudinaryService } from '../../../common/modules/cloudinary/services/cloudinary.service';
 import { FileValidatorPipe, JwtValidationPipe } from '../../../common/pipes';
+import { createUserPayload } from '../../../common/utils/payloads/create-user.payload';
+import { AuthService } from '../../../modules/auth/services/auth.service';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly authService: AuthService,
   ) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+    const newUser = await this.usersService.create(createUserDto);
+    const payload = createUserPayload(newUser);
+
+    const token = await this.authService.createJwtToken({ ...payload });
+    return { user: newUser, token };
   }
 
   @Get()
@@ -71,7 +78,6 @@ export class UsersController {
     const { cvUrl: currentFile } = await this.usersService.findOne(id);
 
     if (currentFile) await this.cloudinaryService.removeFile(currentFile);
-
     return this.usersService.remove(id);
   }
 
@@ -106,7 +112,6 @@ export class UsersController {
     const { cvUrl: currentFile } = await this.usersService.findOne(id);
 
     if (currentFile) await this.cloudinaryService.removeFile(currentFile);
-
     return await this.cloudinaryService.uploadFile(file);
   }
 }
