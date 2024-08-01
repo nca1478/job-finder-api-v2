@@ -6,17 +6,22 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service';
 import { LoginUserDto } from '../dto';
 import { GoogleAuthGuard } from '../guards/google-auth/google-auth.guard';
+import { EnvConfigService } from '../../../common/env-config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: EnvConfigService,
+  ) {}
 
   @Post('/login')
   @HttpCode(HttpStatus.OK)
@@ -32,15 +37,14 @@ export class AuthController {
 
   @Get('/google/redirect')
   @UseGuards(GoogleAuthGuard)
-  googleLoginRedirect(@Req() req: Request) {
-    // return res.redirect('/api/v2');
-    return req.user;
+  async googleLoginRedirect(@Req() req: Request, @Res() res: Response) {
+    const redirectUrl = await this.authService.loginGoogle(req.user);
+    return res.redirect(redirectUrl);
   }
 
   @Get('/google/status')
   googleLoginStatus(@Req() req: Request) {
     if (req.user) return { msg: 'Google Authenticated!!!' };
-
     return { msg: 'Google Not Authenticated!!!' };
   }
 

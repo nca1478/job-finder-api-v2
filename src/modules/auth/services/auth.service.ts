@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -13,6 +14,7 @@ import { UsersService } from '../../../modules/users/services/users.service';
 import { FacebookPayload, GooglePayload, JwtPayload } from '../interfaces';
 import { UserEntity } from '../../users/entities/user.entity';
 import { LoginUserDto } from '../dto';
+import { EnvConfigService } from '../../../common/env-config';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +23,7 @@ export class AuthService {
     private readonly usersRepository: Repository<UserEntity>,
     @Inject(forwardRef(() => UsersService)) private usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly configService: EnvConfigService,
   ) {}
 
   public async createJwtToken(payload: JwtPayload): Promise<string> {
@@ -103,5 +106,24 @@ export class AuthService {
       user,
       token,
     };
+  }
+
+  async loginGoogle(user: any): Promise<string> {
+    if (!user) throw new UnauthorizedException(`Acceso no autorizado`);
+
+    const payload: JwtPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      img: user.img,
+      role: user.role,
+      facebook: user.facebook,
+      google: user.google,
+      createdAt: user.createdAt,
+    };
+
+    const token = await this.createJwtToken(payload);
+
+    return `${this.configService.getGoogleRedirectUrlClient()}?token=${token}`;
   }
 }
