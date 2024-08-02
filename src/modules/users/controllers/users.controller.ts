@@ -19,6 +19,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserEntity } from '../entities/user.entity';
 import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+
+import {
   ChangePassEmailDto,
   ChangePasswordDto,
   CreateUserDto,
@@ -31,7 +38,9 @@ import { CloudinaryService } from '../../../common/modules/cloudinary/services/c
 import { FileValidatorPipe, JwtValidationPipe } from '../../../common/pipes';
 import { createUserPayload } from '../../../common/utils/payloads/create-user.payload';
 import { AuthService } from '../../../modules/auth/services/auth.service';
+import { Order } from 'src/common/constants';
 
+@ApiTags('Usuarios')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -41,6 +50,7 @@ export class UsersController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Registrar nuevo usuario' })
   async create(@Body() createUserDto: CreateUserDto): Promise<any> {
     const newUser = await this.usersService.create(createUserDto);
     const payload = createUserPayload(newUser);
@@ -50,6 +60,11 @@ export class UsersController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Listar todos los usuarios' })
+  @ApiQuery({ name: 'order', enum: Order, required: false })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'take', type: Number, required: false })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   findAll(
     @Query() pageOptionsDto: PageOptionsDto,
@@ -58,12 +73,16 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Mostrar usuario por id' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Actualizar usuario' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -73,6 +92,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Eliminar usuario' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   async remove(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
     const { cvUrl: currentFile } = await this.usersService.findOne(id);
@@ -82,12 +103,14 @@ export class UsersController {
   }
 
   @Post('/verify')
+  @ApiOperation({ summary: 'Verificar usuario' })
   @HttpCode(HttpStatus.OK)
   verify(@Body() verifyUserDto: VerifyUserDto): Promise<UserEntity> {
     return this.usersService.verify(verifyUserDto);
   }
 
   @Put('/change-password')
+  @ApiOperation({ summary: 'Enviar email para cambiar contraseña' })
   sendEmailChangePass(
     @Body() changePassEmailDto: ChangePassEmailDto,
   ): Promise<any> {
@@ -95,6 +118,7 @@ export class UsersController {
   }
 
   @Put('/change-password/:token')
+  @ApiOperation({ summary: 'Cambiar contraseña' })
   changePass(
     @Param('token', JwtValidationPipe) token: string,
     @Body() changePasswordDto: ChangePasswordDto,
@@ -103,6 +127,8 @@ export class UsersController {
   }
 
   @Post(':id/upload-file')
+  @ApiOperation({ summary: 'Subir archivo (pdf o jpeg)' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(

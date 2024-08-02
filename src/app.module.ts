@@ -31,7 +31,7 @@ import { OffersModule } from './modules/offers/offers.module';
     OffersModule,
 
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'public'),
+      rootPath: join(__dirname, '..', 'public'),
     }),
 
     SectorsModule,

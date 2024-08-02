@@ -15,8 +15,10 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+
 import {
   CreateOfferDto,
   BodyOptionsDto,
@@ -26,13 +28,12 @@ import {
 import { GetUser } from '../../../common/decorators';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
 import { FileValidatorPipe } from 'src/common/pipes';
-
 import { CloudinaryService } from '../../../common/modules/cloudinary/services/cloudinary.service';
 import { OffersService } from '../services/offers.service';
-
 import { OfferEntity } from '../entities/offer.entity';
 import { UserEntity } from '../../../modules/users/entities/user.entity';
 
+@ApiTags('Ofertas de Trabajo')
 @Controller('offers')
 export class OffersController {
   constructor(
@@ -41,12 +42,16 @@ export class OffersController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Crear nueva oferta de trabajo' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   create(@Body() createOfferDto: CreateOfferDto, @GetUser() user: UserEntity) {
     return this.offersService.create(createOfferDto, user);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Listar todas las ofertas del usuario' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   findAll(
     @Query() pageOptionsDto: PageOptionsDto,
@@ -56,6 +61,7 @@ export class OffersController {
   }
 
   @Post('/published')
+  @ApiOperation({ summary: 'Listar todas las ofertas publicadas' })
   findAllPublished(
     @Query() pageOptionsDto: PageOptionsDto,
     @Body() bodyOptionsDto: BodyOptionsDto,
@@ -64,6 +70,7 @@ export class OffersController {
   }
 
   @Post('/search')
+  @ApiOperation({ summary: 'Buscar ofertas de trabajo por título' })
   @HttpCode(HttpStatus.OK)
   search(
     @Query() pageOptionsDto: PageOptionsDto,
@@ -73,11 +80,14 @@ export class OffersController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Buscar oferta de trabajo por id' })
   findOne(@Param('id', ParseUUIDPipe) id: string): Promise<any> {
     return this.offersService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Actualizar oferta' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -87,6 +97,9 @@ export class OffersController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Eliminar oferta' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     const { img: currentFile } = await this.offersService.findOne(id);
 
@@ -96,6 +109,7 @@ export class OffersController {
   }
 
   @Put(':id/publish')
+  @ApiOperation({ summary: 'Publicar oferta' })
   publish(
     @Param('id', ParseUUIDPipe) id: string,
     @Query() queryParamOptionsDto: QueryParamsOptionsDto,
@@ -104,6 +118,8 @@ export class OffersController {
   }
 
   @Post(':id/upload-file')
+  @ApiOperation({ summary: 'Subir archivo (pdf o jpeg)' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
