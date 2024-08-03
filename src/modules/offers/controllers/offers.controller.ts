@@ -25,7 +25,7 @@ import {
   UpdateOfferDto,
   QueryParamsOptionsDto,
 } from '../dto';
-import { GetUser } from '../../../common/decorators';
+import { ApiQueryPagination, GetUser } from '../../../common/decorators';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
 import { FileValidatorPipe } from 'src/common/pipes';
 import { CloudinaryService } from '../../../common/modules/cloudinary/services/cloudinary.service';
@@ -52,6 +52,7 @@ export class OffersController {
   @Get()
   @ApiOperation({ summary: 'Listar todas las ofertas del usuario' })
   @ApiBearerAuth()
+  @ApiQueryPagination()
   @UseGuards(AuthGuard('jwt'))
   findAll(
     @Query() pageOptionsDto: PageOptionsDto,
@@ -62,6 +63,7 @@ export class OffersController {
 
   @Post('/published')
   @ApiOperation({ summary: 'Listar todas las ofertas publicadas' })
+  @ApiQueryPagination()
   findAllPublished(
     @Query() pageOptionsDto: PageOptionsDto,
     @Body() bodyOptionsDto: BodyOptionsDto,
@@ -71,6 +73,7 @@ export class OffersController {
 
   @Post('/search')
   @ApiOperation({ summary: 'Buscar ofertas de trabajo por título' })
+  @ApiQueryPagination()
   @HttpCode(HttpStatus.OK)
   search(
     @Query() pageOptionsDto: PageOptionsDto,
