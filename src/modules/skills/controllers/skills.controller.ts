@@ -17,6 +17,7 @@ import { SkillsService } from '../services/skills.service';
 import { CreateSkillDto, UpdateSkillDto } from '../dto';
 import { SkillEntity } from '../entities/skill.entity';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
+import { ApiQueryPagination } from '../../../common/decorators';
 
 @ApiTags('Habilidades')
 @Controller('skills')
@@ -33,6 +34,7 @@ export class SkillsController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todas las habilidades' })
+  @ApiQueryPagination()
   findAll(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<SkillEntity>> {
