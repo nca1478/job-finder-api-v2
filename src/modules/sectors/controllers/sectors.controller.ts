@@ -17,6 +17,7 @@ import { SectorsService } from '../services/sectors.service';
 import { CreateSectorDto, UpdateSectorDto } from '../dto';
 import { SectorEntity } from '../entities/sector.entity';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
+import { ApiQueryPagination } from '../../../common/decorators';
 
 @ApiTags('Sectores')
 @Controller('sectors')
@@ -33,6 +34,7 @@ export class SectorsController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todos los sectores' })
+  @ApiQueryPagination()
   findAll(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<SectorEntity>> {
