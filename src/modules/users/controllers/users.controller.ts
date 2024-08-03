@@ -18,12 +18,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserEntity } from '../entities/user.entity';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import {
   ChangePassEmailDto,
@@ -38,7 +33,7 @@ import { CloudinaryService } from '../../../common/modules/cloudinary/services/c
 import { FileValidatorPipe, JwtValidationPipe } from '../../../common/pipes';
 import { createUserPayload } from '../../../common/utils/payloads/create-user.payload';
 import { AuthService } from '../../../modules/auth/services/auth.service';
-import { Order } from 'src/common/constants';
+import { ApiQueryPagination } from '../../../common/decorators';
 
 @ApiTags('Usuarios')
 @Controller('users')
@@ -61,10 +56,8 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todos los usuarios' })
-  @ApiQuery({ name: 'order', enum: Order, required: false })
-  @ApiQuery({ name: 'page', type: Number, required: false })
-  @ApiQuery({ name: 'take', type: Number, required: false })
   @ApiBearerAuth()
+  @ApiQueryPagination()
   @UseGuards(AuthGuard('jwt'))
   findAll(
     @Query() pageOptionsDto: PageOptionsDto,
