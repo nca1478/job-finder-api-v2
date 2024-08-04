@@ -4,8 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import {
   CreateOfferDto,
+  PublishOfferDto,
   UpdateOfferDto,
-  QueryParamsOptionsDto,
   SearchDto,
 } from '../dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
@@ -212,8 +212,8 @@ export class OffersService {
     return this.offersRepository.remove(offer);
   }
 
-  async publish(id: string, queryParamsOptionsDto: QueryParamsOptionsDto) {
-    const { status } = queryParamsOptionsDto;
+  async publish(id: string, publishOfferDto: PublishOfferDto) {
+    const { status } = publishOfferDto;
     const offer = await this.offersRepository.findOne({
       where: { id },
     });

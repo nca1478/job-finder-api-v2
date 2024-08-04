@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean } from 'class-validator';
 
-export class QueryParamsOptionsDto {
+export class PublishOfferDto {
   @Transform(({ value }) => value === 'true')
   @IsBoolean({ message: 'Status no válido' })
   status: boolean;

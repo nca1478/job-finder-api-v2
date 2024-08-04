@@ -21,8 +21,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   CreateOfferDto,
+  PublishOfferDto,
   UpdateOfferDto,
-  QueryParamsOptionsDto,
   SearchDto,
 } from '../dto';
 import { ApiQueryPagination, GetUser } from '../../../common/decorators';
@@ -114,9 +114,9 @@ export class OffersController {
   @ApiOperation({ summary: 'Publicar oferta' })
   publish(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query() queryParamOptionsDto: QueryParamsOptionsDto,
+    @Query() publishOfferDto: PublishOfferDto,
   ) {
-    return this.offersService.publish(id, queryParamOptionsDto);
+    return this.offersService.publish(id, publishOfferDto);
   }
 
   @Post(':id/upload-file')
