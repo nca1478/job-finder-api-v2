@@ -21,9 +21,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   CreateOfferDto,
-  BodyOptionsDto,
   UpdateOfferDto,
   QueryParamsOptionsDto,
+  SearchDto,
 } from '../dto';
 import { ApiQueryPagination, GetUser } from '../../../common/decorators';
 import { PageDto, PageOptionsDto } from '../../../common/dtos';
@@ -58,7 +58,7 @@ export class OffersController {
     @Query() pageOptionsDto: PageOptionsDto,
     @GetUser() user: UserEntity,
   ): Promise<PageDto<OfferEntity>> {
-    return this.offersService.findAll(pageOptionsDto, null, user);
+    return this.offersService.findAll(pageOptionsDto, user, null);
   }
 
   @Post('/published')
@@ -66,9 +66,8 @@ export class OffersController {
   @ApiQueryPagination()
   findAllPublished(
     @Query() pageOptionsDto: PageOptionsDto,
-    @Body() bodyOptionsDto: BodyOptionsDto,
   ): Promise<PageDto<OfferEntity>> {
-    return this.offersService.findAll(pageOptionsDto, bodyOptionsDto, null);
+    return this.offersService.findAll(pageOptionsDto, null, null);
   }
 
   @Post('/search')
@@ -77,9 +76,9 @@ export class OffersController {
   @HttpCode(HttpStatus.OK)
   search(
     @Query() pageOptionsDto: PageOptionsDto,
-    @Body() bodyOptionsDto: BodyOptionsDto,
+    @Body() searchDto: SearchDto,
   ): Promise<PageDto<OfferEntity>> {
-    return this.offersService.findAll(pageOptionsDto, bodyOptionsDto, null);
+    return this.offersService.findAll(pageOptionsDto, null, searchDto);
   }
 
   @Get(':id')

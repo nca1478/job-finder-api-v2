@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import {
   CreateOfferDto,
-  BodyOptionsDto,
   UpdateOfferDto,
   QueryParamsOptionsDto,
+  SearchDto,
 } from '../dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 
@@ -61,8 +61,8 @@ export class OffersService {
 
   async findAll(
     pageOptionsDto: PageOptionsDto,
-    bodyOptionsDto: BodyOptionsDto,
     user?: UserEntity,
+    searchDto?: SearchDto,
   ): Promise<PageDto<OfferEntity>> {
     const offers = this.offersRepository.createQueryBuilder('o');
 
@@ -76,14 +76,15 @@ export class OffersService {
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
-    if (user) offers.where('user.id = :id', { id: user?.id });
-
-    if (bodyOptionsDto && bodyOptionsDto.status)
+    if (user) {
+      offers.where('user.id = :id', { id: user?.id });
+    } else {
       offers.where('o.published = :published', { published: true });
+    }
 
-    if (bodyOptionsDto && bodyOptionsDto.title)
+    if (searchDto && searchDto.title)
       offers.andWhere('(LOWER(o.title) LIKE LOWER(:title))', {
-        title: `%${bodyOptionsDto.title}%`,
+        title: `%${searchDto.title}%`,
       });
 
     const itemCount = await offers.getCount();
