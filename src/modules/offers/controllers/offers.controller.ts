@@ -15,7 +15,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -32,6 +32,7 @@ import { CloudinaryService } from '../../../common/modules/cloudinary/services/c
 import { OffersService } from '../services/offers.service';
 import { OfferEntity } from '../entities/offer.entity';
 import { UserEntity } from '../../../modules/users/entities/user.entity';
+import { ApiBodySearch } from '../decorators/api-body-search/api-body-search.decorator';
 
 @ApiTags('Ofertas de Trabajo')
 @Controller('offers')
@@ -73,6 +74,7 @@ export class OffersController {
   @Post('/search')
   @ApiOperation({ summary: 'Buscar ofertas de trabajo por título' })
   @ApiQueryPagination()
+  @ApiBodySearch()
   @HttpCode(HttpStatus.OK)
   search(
     @Query() pageOptionsDto: PageOptionsDto,
