@@ -23,6 +23,6 @@ export interface EnvConfig {
   getCloudinaryCloudName(): string;
   getCloudinaryApiKey(): string;
   getCloudinaryApiSecret(): string;
-  getDbSynchronize(): boolean;
+  getDbSynchronize(): string;
   getUrlClientLoginRedirect(): string;
 }

@@ -6,8 +6,8 @@ import { EnvConfigModule, EnvConfigService } from '../../common/env-config';
 import { FacebookStrategy, GoogleStrategy, JwtStrategy } from './strategies';
 import { AuthController } from './controllers/auth.controller';
 import { UserEntity } from '../users/entities/user.entity';
-import { SessionSerializer } from './utils/Serializer';
 import { UsersModule } from '../users/users.module';
+import { SessionSerializer } from './utils/serializer';
 
 @Module({
   imports: [

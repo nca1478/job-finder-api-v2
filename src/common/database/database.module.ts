@@ -12,12 +12,12 @@ const DB_ENTITIES = __dirname + '/../../modules/**/entities/*.entity{.ts,.js}';
         return {
           type: 'postgres',
           host: configService.getDbHost(),
-          port: configService.getDbPort(),
+          port: Number(configService.getDbPort()),
           username: configService.getDbUsername(),
           password: configService.getDbPassword(),
           database: configService.getDbName(),
           entities: [DB_ENTITIES],
-          synchronize: configService.getDbSynchronize(),
+          synchronize: configService.getDbSynchronize() === 'true',
         };
       },
       inject: [EnvConfigService],
