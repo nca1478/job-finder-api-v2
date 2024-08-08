@@ -7,6 +7,8 @@ export const basicPropertiesMigration: TableColumnOptions[] = [
     isPrimary: true,
     isUnique: true,
     isGenerated: true,
+    generationStrategy: 'uuid',
+    default: 'uuid_generate_v4()',
   },
   {
     name: 'createdAt',

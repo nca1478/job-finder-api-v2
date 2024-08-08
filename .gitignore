@@ -5,6 +5,9 @@
 /postgres
 /coverage
 .env
+.env.dev
+.env.prod
+package-lock.json
 
 # Logs
 logs

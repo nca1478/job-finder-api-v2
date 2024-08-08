@@ -40,8 +40,8 @@ export class OffersService {
     const newOffer = this.offersRepository.create(createOfferDto);
 
     const [skills, sectors] = await Promise.all([
-      await this.skillsService.preload(createOfferDto.skills),
-      await this.sectorsService.preload(createOfferDto.sectors),
+      this.skillsService.preload(createOfferDto.skills),
+      this.sectorsService.preload(createOfferDto.sectors),
     ]);
 
     const offer = await this.offersRepository.save({ ...newOffer, user });
