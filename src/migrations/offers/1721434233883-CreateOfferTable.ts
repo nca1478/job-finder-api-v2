@@ -52,7 +52,7 @@ export class CreateOfferTable1721434233883 implements MigrationInterface {
           },
           {
             name: 'published',
-            type: 'varchar',
+            type: 'boolean',
             default: false,
           },
           {
