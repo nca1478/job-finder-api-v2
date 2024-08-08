@@ -1,5 +1,4 @@
-import { randomUUID } from 'crypto';
-import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { SectorModel } from '../models/sector.model';
 
 import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
@@ -12,14 +11,6 @@ export class SectorEntity extends ColumnCommonEntity implements SectorModel {
 
   @Column('bool', { default: true })
   active?: boolean;
-
-  @BeforeInsert()
-  generatedId() {
-    if (this.id) {
-      return;
-    }
-    this.id = randomUUID();
-  }
 
   // Relaciones
   @OneToMany(() => OfferSector, (offerSector) => offerSector.sector, {

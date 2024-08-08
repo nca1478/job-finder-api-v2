@@ -1,5 +1,4 @@
-import { randomUUID } from 'crypto';
-import { BeforeInsert, Entity, ManyToOne } from 'typeorm';
+import { Entity, ManyToOne } from 'typeorm';
 
 import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
 import { OfferEntity as Offer } from './index';
@@ -11,14 +10,6 @@ export class OfferSectorsEntity
   extends ColumnCommonEntity
   implements OfferSectorModel
 {
-  @BeforeInsert()
-  generatedId() {
-    if (this.id) {
-      return;
-    }
-    this.id = randomUUID();
-  }
-
   // Relaciones
   @ManyToOne(() => Offer, (offer) => offer.offerSector)
   offer: Offer;

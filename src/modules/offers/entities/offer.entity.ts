@@ -1,5 +1,4 @@
-import { randomUUID } from 'crypto';
-import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { OfferModel } from '../models/offer.model';
 
 import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
@@ -38,14 +37,6 @@ export class OfferEntity extends ColumnCommonEntity implements OfferModel {
 
   @Column('bool', { default: true })
   active?: boolean;
-
-  @BeforeInsert()
-  generatedId() {
-    if (this.id) {
-      return;
-    }
-    this.id = randomUUID();
-  }
 
   // Relaciones
   @ManyToOne(() => User, (user) => user.offer, { eager: true })

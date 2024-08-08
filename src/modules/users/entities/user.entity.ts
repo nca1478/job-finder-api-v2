@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcrypt';
-import { randomUUID } from 'node:crypto';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { UserModel, roleEnum } from '../models/user.model';
 import { ColumnCommonEntity } from '../../../common/entities/column-common.entity';
@@ -57,14 +56,6 @@ export class UserEntity extends ColumnCommonEntity implements UserModel {
 
   @Column('bool', { default: true })
   active: boolean;
-
-  @BeforeInsert()
-  generatedId() {
-    if (this.id) {
-      return;
-    }
-    this.id = randomUUID();
-  }
 
   @BeforeInsert()
   setRole() {
