@@ -14,6 +14,7 @@ services:
     ports:
       - ${PORT}:${PORT}
     environment:
+      - NODE_ENV=prod
       - SESSION_KEY:${SESSION_KEY}
       - URL_CLIENT:${URL_CLIENT}
       - URL_CLIENT_LOGIN_REDIRECT:${URL_CLIENT_LOGIN_REDIRECT}

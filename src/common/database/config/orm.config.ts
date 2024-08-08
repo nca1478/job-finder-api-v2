@@ -1,6 +1,10 @@
 import 'dotenv/config';
+// import * as dotenv from 'dotenv';
 import * as process from 'process';
 import { DataSource, DataSourceOptions } from 'typeorm';
+
+// const envFile = `.env.${process.env.NODE_ENV || 'dev'}`;
+// dotenv.config({ path: envFile });
 
 // Para migraciones: "npm run migration:run"
 const dataSourceOptions: DataSourceOptions = {

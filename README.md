@@ -7,7 +7,7 @@
 
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
 
-## Installation (dev y prod)
+## Installation (dev y prod).
 
 1. Clonar el proyecto.
 2. Clonar el archivo **.env.example** y renombrarlo a **.env**.
