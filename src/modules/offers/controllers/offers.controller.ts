@@ -62,7 +62,7 @@ export class OffersController {
     return this.offersService.findAll(pageOptionsDto, user, null);
   }
 
-  @Post('/published')
+  @Get('/published')
   @ApiOperation({ summary: 'Listar todas las ofertas publicadas' })
   @ApiQueryPagination()
   findAllPublished(
