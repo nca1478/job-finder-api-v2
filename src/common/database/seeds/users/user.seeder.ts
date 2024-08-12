@@ -19,7 +19,7 @@ export class UserSeeder implements Seeder {
       id: randomUUID(),
       name: 'Nelson Cadenas',
       email: 'nca1478@gmail.com',
-      password: await hash('123456Pass$$', 10),
+      password: await hash('123456Pass**', 10),
       role: roleEnum.admin,
     };
 

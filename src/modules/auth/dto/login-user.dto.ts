@@ -14,7 +14,7 @@ export class LoginUserDto {
   @ApiProperty({
     description: 'Contraseña del usuario',
     required: true,
-    example: 'alguna contraseña',
+    example: '123456Pass**',
   })
   @IsNotEmpty({ message: 'La contraseña es requerida' })
   password: string;
