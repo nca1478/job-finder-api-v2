@@ -69,22 +69,22 @@
 
 ## Instalación de Api y Base de Datos
 
-## Variables de entorno
+## Configuración de Variables de entorno
 
 - Renombrar .env.example a .env.
 - Agregar las credenciales al .env.
 - Actualizar variable `NODE_ENV` a `dev` o `prod` sea el caso.
 
-## Opcion 1: Instalar Api, DB, Migraciones y Seeders
+## Opción 1: Instalar Api, DB, Migraciones y Seeders
 
 - Copiar todos los archivos de la carpeta docker a la raíz.
 - Ejecutar el comando: `docker compose up --build -d`
 - Para eliminar: `docker compose down --volumes`
 
-## Opcion 2: Instalar solo Base de Datos; Migraciones y Seeders
+## Opción 2: Instalar solo Base de Datos; Migraciones y Seeders
 
 - Copiar todos los archivos de la carpeta db a la raíz.
-- Ejecuta: `docker compose -f db/docker-compose.yml up -d`
+- Ejecuta: `docker compose up -d`
 - Migraciones: `npm run migration:run`.
 - Seeders: `npm run seed`
 - Dependencias: `npm install`.
