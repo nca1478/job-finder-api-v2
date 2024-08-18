@@ -25,7 +25,8 @@
     "mig:gen": "npm run typeorm migration:generate -- ",
     "mig:run": "npm run typeorm migration:run",
     "mig:rev": "npm run typeorm migration:revert",
-    "seed": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/common/database/config/seeds.config.ts"
+    "seed": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/common/database/config/seeds.config.ts",
+    "seed:prod": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d dist/common/database/config/seeds.config.js"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "^0.6.96",

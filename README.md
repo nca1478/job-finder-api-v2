@@ -67,29 +67,33 @@
 - Nestjs v10.
 - Postman v11.
 
-## Instalación de dependencias.
+## Instalación de Api y Base de Datos
 
-> npm install
-
-## Configuración de variables de entorno.
+## Variables de entorno
 
 - Renombrar .env.example a .env.
 - Agregar las credenciales al .env.
+- Actualizar variable `NODE_ENV` a `dev` o `prod` sea el caso.
 
-## Creación de DB en Postgres.
+## Opcion 1: Instalar Api, DB, Migraciones y Seeders
 
-- Copiar archivos docker de /docker/dev en la raíz del proyecto.
-- Ejecutar comando: `docker compose up -d`
-- Ejecutar migraciones: `npm run migration:run`
-- Ejecutar seeders: `npm run seed`
+- Copiar todos los archivos de la carpeta docker a la raíz.
+- Ejecutar el comando: `docker compose up --build -d`
+- Para eliminar: `docker compose down --volumes`
 
-## Ejecutar la Api
+## Opcion 2: Instalar solo Base de Datos; Migraciones y Seeders
 
-> npm run start:dev (modo development)
+- Copiar todos los archivos de la carpeta db a la raíz.
+- Ejecuta: `docker compose -f db/docker-compose.yml up -d`
+- Migraciones: `npm run migration:run`.
+- Seeders: `npm run seed`
+- Dependencias: `npm install`.
+- Ejecutar Api: `npm run start:dev`
+- Eliminar DB: `docker compose -f db/docker-compose.yml down --volumes`
 
-## Archivo de Entrada
+## Pruebas de Endpoints en Postman
 
-> src/main.ts
+- Importar endpoints y variables de la carpeta postman
 
 ## Documentación de Endpoints
 
@@ -100,6 +104,6 @@
 - Así podrá probar los endpoints protegidos.
 - Nota: actualice el token cada vez que inicie sesión.
 
-## Prueba de Endpoints en Postman
+## Archivo de entrada
 
-- Importar endpoints y variables de la carpeta postman
+> src/main.ts

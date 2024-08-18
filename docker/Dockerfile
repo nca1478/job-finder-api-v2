@@ -1,0 +1,32 @@
+# syntax=docker/dockerfile:1
+
+ARG NODE_VERSION=20.12.0
+FROM node:${NODE_VERSION}-alpine AS base
+WORKDIR /usr/src/app
+FROM base AS deps
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev
+
+FROM deps AS build
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci
+COPY . .
+RUN npm run build
+
+FROM base AS prod
+ENV NODE_ENV=prod
+USER node
+COPY package.json .
+COPY --from=deps /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/public ./public
+COPY --from=build /usr/src/app/src/common/database/seeds/data \
+    ./dist/common/database/seeds/data
+EXPOSE 4000
+CMD npm run migration:run \
+    && npm run seed:prod \
+    && npm run start:prod

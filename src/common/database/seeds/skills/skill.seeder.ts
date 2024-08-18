@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { readFileSync } from 'fs';
 import { DataSource } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
@@ -8,9 +9,8 @@ export class SkillSeeder implements Seeder {
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,
   ): Promise<any> {
-    const { skills } = JSON.parse(
-      readFileSync('./src/common/database/seeds/data/skills.data.json', 'utf8'),
-    );
+    const data = path.join(__dirname + '/' + '..' + '/data/skills.data.json');
+    const { skills } = JSON.parse(readFileSync(data, 'utf8'));
     const repository = dataSource.getRepository(SkillEntity);
     const skillsArray: any = [];
 

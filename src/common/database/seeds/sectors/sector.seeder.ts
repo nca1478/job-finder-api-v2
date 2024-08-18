@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { readFileSync } from 'fs';
 import { DataSource } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
@@ -8,12 +9,8 @@ export class SectorSeeder implements Seeder {
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,
   ): Promise<any> {
-    const { sectors } = JSON.parse(
-      readFileSync(
-        './src/common/database/seeds/data/sectors.data.json',
-        'utf8',
-      ),
-    );
+    const data = path.join(__dirname + '/' + '..' + '/data/sectors.data.json');
+    const { sectors } = JSON.parse(readFileSync(data, 'utf8'));
     const repository = dataSource.getRepository(SectorEntity);
     const sectorsArray: any = [];
 
