@@ -5,6 +5,7 @@ services:
     container_name: 'job-finder-api'
     build:
       context: .
+      target: ${NODE_ENV}
     environment:
       - PORT=${PORT}
       - NODE_ENV=${NODE_ENV}
@@ -35,6 +36,9 @@ services:
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     ports:
       - 4000:4000
+      - 9229:9229
+    volumes:
+      - ./src:/usr/src/app/src
     depends_on:
       db:
         condition: service_healthy
