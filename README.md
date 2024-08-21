@@ -89,7 +89,7 @@
 - Seeders: `npm run seed`
 - Dependencias: `npm install`.
 - Ejecutar Api: `npm run start:dev`
-- Eliminar DB: `docker compose -f db/docker-compose.yml down --volumes`
+- Eliminar DB: `docker compose down --volumes`
 
 ## Pruebas de Endpoints en Postman
 
