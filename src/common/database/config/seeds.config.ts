@@ -5,6 +5,9 @@ import { SeederOptions } from 'typeorm-extension';
 import { DataSourceOptions } from 'typeorm/data-source';
 import InitSeeder from '../seeds/init.seeder';
 
+const isSSLEnabled = process.env.DB_SSL_ENABLED === 'true';
+const isRejectUnauthorized = process.env.DB_SSL_REJECT_UNAUTHORIZED === 'true';
+
 const options = {
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
@@ -14,6 +17,7 @@ const options = {
   database: process.env.DB_NAME,
   entities: [__dirname + '/../../../modules/**/entities/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../../../migrations/**/*{.ts,.js}'],
+  ssl: isSSLEnabled ? { rejectUnauthorized: isRejectUnauthorized } : false,
   seeds: [InitSeeder],
 };
 

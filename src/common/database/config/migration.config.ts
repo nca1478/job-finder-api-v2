@@ -1,3 +1,4 @@
+// Migraciones con: "npm run mig:gen"
 import 'dotenv/config';
 import * as process from 'process';
 import { DataSource } from 'typeorm';
@@ -5,7 +6,9 @@ import { SeederOptions } from 'typeorm-extension';
 import { DataSourceOptions } from 'typeorm/data-source';
 import InitSeeder from '../seeds/init.seeder';
 
-// Para migraciones: "npm run mig:gen"
+const isSSLEnabled = process.env.DB_SSL_ENABLED === 'true';
+const isRejectUnauthorized = process.env.DB_SSL_REJECT_UNAUTHORIZED === 'true';
+
 const options = {
   type: 'postgres',
   host: process.env.DB_HOST,
@@ -15,6 +18,7 @@ const options = {
   database: process.env.DB_NAME,
   entities: [__dirname + '/../../../modules/**/entities/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
+  ssl: isSSLEnabled ? { rejectUnauthorized: isRejectUnauthorized } : false,
   seeds: [InitSeeder],
 };
 

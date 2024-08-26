@@ -112,4 +112,12 @@ export class EnvConfigService implements EnvConfig {
   getUrlClientLoginRedirect(): string {
     return this.configService.getOrThrow<string>('URL_CLIENT_LOGIN_REDIRECT');
   }
+
+  getDbSslEnabled(): string {
+    return this.configService.getOrThrow<string>('DB_SSL_ENABLED');
+  }
+
+  getDbSslRejectUnauthorized(): string {
+    return this.configService.getOrThrow<string>('DB_SSL_REJECT_UNAUTHORIZED');
+  }
 }

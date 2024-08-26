@@ -9,6 +9,10 @@ const DB_ENTITIES = __dirname + '/../../modules/**/entities/*.entity{.ts,.js}';
     TypeOrmModule.forRootAsync({
       imports: [EnvConfigModule],
       useFactory: async (configService: EnvConfigService) => {
+        const isSSLEnabled = configService.getDbSslEnabled() === 'true';
+        const isRejectUnauthorized =
+          configService.getDbSslRejectUnauthorized() === 'true';
+
         return {
           type: 'postgres',
           host: configService.getDbHost(),
@@ -17,6 +21,9 @@ const DB_ENTITIES = __dirname + '/../../modules/**/entities/*.entity{.ts,.js}';
           password: configService.getDbPassword(),
           database: configService.getDbName(),
           entities: [DB_ENTITIES],
+          ssl: isSSLEnabled
+            ? { rejectUnauthorized: isRejectUnauthorized }
+            : false,
           synchronize: configService.getDbSynchronize() === 'true',
         };
       },

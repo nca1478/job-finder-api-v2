@@ -25,4 +25,6 @@ export interface EnvConfig {
   getCloudinaryApiSecret(): string;
   getDbSynchronize(): string;
   getUrlClientLoginRedirect(): string;
+  getDbSslEnabled(): string;
+  getDbSslRejectUnauthorized(): string;
 }
