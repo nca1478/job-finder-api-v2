@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  server:
+    container_name: 'job-finder-api'
+    build:
+      context: .
+      target: ${NODE_ENV}
+    environment:
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+      - SESSION_KEY=${SESSION_KEY}
+      - URL_CLIENT=${URL_CLIENT}
+      - URL_CLIENT_LOGIN_REDIRECT=${URL_CLIENT_LOGIN_REDIRECT}
+      - APP_VERSION=${APP_VERSION}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_SYNCHRONIZE=${DB_SYNCHRONIZE}
+      - DB_SSL_ENABLED=${DB_SSL_ENABLED}
+      - DB_SSL_REJECT_UNAUTHORIZED=${DB_SSL_REJECT_UNAUTHORIZED}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - JWT_ALGORITHM=${JWT_ALGORITHM}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
+      - FACEBOOK_APP_ID=${FACEBOOK_APP_ID}
+      - FACEBOOK_APP_SECRET_KEY=${FACEBOOK_APP_SECRET_KEY}
+      - FACEBOOK_CALLBACK_URL=${FACEBOOK_CALLBACK_URL}
+      - SENDGRID_ACCESS_KEY=${SENDGRID_ACCESS_KEY}
+      - SENDGRID_FROM_EMAIL=${SENDGRID_FROM_EMAIL}
+      - SENDGRID_SANDBOX_MODE=${SENDGRID_SANDBOX_MODE}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+    ports:
+      - 4000:4000
+      - 9229:9229
+    volumes:
+      - ./src:/usr/src/app/src
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    container_name: 'job-finder-db'
+    image: postgres
+    restart: always
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    expose:
+      - 5432:5432
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  db-data:
