@@ -14,7 +14,7 @@ async function bootstrap() {
 
   await app.listen(configService.getAppPort());
 
-  logger.log(`App running on port ${configService.getAppPort()}`);
+  logger.log(`App running on port 111 ${configService.getAppPort()}`);
 }
 
 bootstrap();
