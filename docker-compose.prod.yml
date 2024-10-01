@@ -5,7 +5,6 @@ services:
     container_name: 'job-finder-api'
     build:
       context: .
-      target: prod
       dockerfile: Dockerfile.prod
     environment:
       - PORT=${PORT}
