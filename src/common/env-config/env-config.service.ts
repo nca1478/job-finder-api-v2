@@ -11,9 +11,9 @@ export class EnvConfigService implements EnvConfig {
     return Number(this.configService.getOrThrow<number>('PORT'));
   }
 
-  getNodeEnv(): string {
-    return this.configService.getOrThrow<string>('NODE_ENV');
-  }
+  // getNodeEnv(): string {
+  //   return this.configService.getOrThrow<string>('NODE_ENV');
+  // }
 
   getDbHost(): string {
     return this.configService.getOrThrow<string>('DB_HOST');

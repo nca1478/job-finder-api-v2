@@ -1,6 +1,6 @@
 export interface EnvConfig {
   getAppPort(): number;
-  getNodeEnv(): string;
+  // getNodeEnv(): string;
   getDbHost(): string;
   getDbPort(): number;
   getDbUsername(): string;
