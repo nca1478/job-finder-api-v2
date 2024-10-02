@@ -20,7 +20,6 @@ import { UserEntity } from '../entities/user.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../../common/dtos';
 import { AuthService } from '../../../modules/auth/services/auth.service';
 import { EmailsService } from '../../../modules/emails/services/emails/emails.service';
-import { createUserPayload } from '../../../common/utils/payloads/create-user.payload';
 
 @Injectable()
 export class UsersService {
@@ -33,6 +32,14 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<any> {
     const body = this.usersRepository.create(createUserDto);
+    const user = await this.usersRepository.findOne({
+      where: { email: body.email, google: false, facebook: false },
+    });
+
+    if (user) {
+      throw new NotFoundException('Usuario ya está registrado.');
+    }
+
     const newUser = await this.usersRepository.save(body);
 
     return newUser;
@@ -72,9 +79,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(
-        'Email no encontrado o no permite cambiar contraseña.',
-      );
+      throw new NotFoundException('Email no encontrado.');
     }
 
     return user;
