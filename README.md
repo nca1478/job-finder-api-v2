@@ -73,15 +73,13 @@
 
 - Renombrar .env.example a .env.
 - Agregar las credenciales al .env.
-- Actualizar variable `NODE_ENV` a `dev` o `prod` sea el caso.
 
-## Opción 1: Instalar Api, DB, Migraciones y Seeders
+## Opción 1: Ejecutar Api, Crear DB, Migraciones y Seeders (dev)
 
-- Copiar todos los archivos de la carpeta docker a la raíz.
 - Ejecutar el comando: `docker compose up --build -d`
 - Para eliminar: `docker compose down --volumes`
 
-## Opción 2: Instalar solo Base de Datos; Migraciones y Seeders
+## Opción 2: Ejecutar Api, Crear DB, Migraciones y Seeders (dev)
 
 - Copiar todos los archivos de la carpeta db a la raíz.
 - Ejecuta: `docker compose up -d`
@@ -90,6 +88,10 @@
 - Dependencias: `npm install`.
 - Ejecutar Api: `npm run start:dev`
 - Eliminar DB: `docker compose down --volumes`
+
+## Opción 3: Ejecutar Api, Migraciones y Seeders (prod)
+
+- Ejecutar el comando: `docker compose -f docker-compose.prod.yml up --build -d`
 
 ## Pruebas de Endpoints en Postman
 
