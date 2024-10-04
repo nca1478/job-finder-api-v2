@@ -93,7 +93,7 @@
 
 ## Pruebas de Endpoints en Postman
 
-- Importar endpoints y variables de la carpeta postman
+- Importar endpoints y variables de la carpeta postman.
 
 ## Documentación de Endpoints
 
