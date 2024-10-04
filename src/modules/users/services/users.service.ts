@@ -33,7 +33,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<any> {
     const body = this.usersRepository.create(createUserDto);
     const user = await this.usersRepository.findOne({
-      where: { email: body.email, google: false, facebook: false },
+      where: { email: body.email },
     });
 
     if (user) {
