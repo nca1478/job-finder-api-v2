@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 ARG NODE_VERSION=20.12.0
 FROM node:${NODE_VERSION}-alpine
 WORKDIR /usr/src/app
