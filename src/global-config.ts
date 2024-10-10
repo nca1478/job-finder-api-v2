@@ -44,7 +44,7 @@ export function applyGlobalConfig(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('Jobfinder Api v2')
     .setDescription(
-      'Esta es la documentación de todos los endpoints la app jobfinder',
+      'Esta es la documentación de los servicios de la app jobfinder',
     )
     .setVersion('1.0')
     .addBearerAuth()
